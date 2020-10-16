@@ -37,6 +37,7 @@
 @import url("../node_modules/bulma/css/bulma.min.css");
 
 #app {
+  width: 75%;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -51,6 +52,15 @@
 .nav-section {
   flex: 1;
 }
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+}
+
+#nav {
+  padding: 30px;
 
 .title {
   justify-content: center;
