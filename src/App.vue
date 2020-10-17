@@ -43,7 +43,6 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -57,6 +56,13 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100%;
+}
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
 }
 
 .title {
