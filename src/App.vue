@@ -26,7 +26,7 @@
 
     <footer class="footer">
       <div class="content has-text-centered">
-        © {{ new Date().getFullYear()}} Helpy
+        © {{ new Date().getYear() + 1900 }} Helpy
       </div>
     </footer>
   </div>
@@ -43,6 +43,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -57,12 +58,9 @@ body {
   align-items: center;
   min-height: 100%;
 }
-h1 {
-  font-size: 2em;
-}
 
-h2 {
-  font-size: 1.5em;
+#nav {
+  padding: 30px;
 }
 
 .title {

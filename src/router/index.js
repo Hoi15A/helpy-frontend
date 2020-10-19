@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Requests from "../views/Requests.vue";
+import CreateRequest from "@/views/CreateRequest";
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,11 @@ const routes = [
     path: "/requests",
     name: "Requests",
     component: Requests
+  },
+  {
+    path: "/requests/create",
+    name: "Create Request",
+    component: CreateRequest
   },
   {
     path: "/about",
