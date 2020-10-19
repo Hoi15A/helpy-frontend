@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-menu">
         <div class="nav-section">
@@ -24,6 +25,7 @@
       </div>
     </section>
 
+
     <footer class="footer">
       <div class="content has-text-centered">
         © {{ new Date().getYear() + 1900 }} Helpy
@@ -37,7 +39,7 @@
 @import url("../node_modules/bulma/css/bulma.min.css");
 
 #app {
-  width: 75%;
+
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -52,15 +54,13 @@
 .nav-section {
   flex: 1;
 }
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100%;
+
+h1 {
+  font-size: 2em;
 }
 
-#nav {
-  padding: 30px;
+h2 {
+  font-size: 1.5em;
 }
 
 .title {
