@@ -80,7 +80,7 @@
           <div class="level-right">
             <div class="buttons">
               <button class="button is-info" :disabled="!this.isValid">Profil speichern</button>
-              <button class="button">Abbrechen</button>
+              <button class="button" @click="$router.go(-1)">Abbrechen</button>
             </div>
           </div>
         </div>
