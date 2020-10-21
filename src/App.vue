@@ -47,7 +47,7 @@
 
     <footer class="footer">
       <div class="content has-text-centered">
-        © {{ new Date().getYear() + 1900 }} Helpy
+        © {{ new Date().getFullYear() }} Helpy
       </div>
     </footer>
   </div>
