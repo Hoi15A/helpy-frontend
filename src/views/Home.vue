@@ -52,7 +52,7 @@ export default {
 
 
 
-<style>
+<style scoped>
 .info-text {
   display: flex;
   flex-direction: column;

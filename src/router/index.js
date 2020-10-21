@@ -6,6 +6,7 @@ import Register from "../views/Register.vue";
 import Requests from "../views/Requests.vue";
 import CreateRequest from "@/views/CreateRequest";
 import History from "@/views/History";
+import Profile from "@/views/Profile";
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,11 @@ const routes = [
     path: "/history",
     name: "History",
     component: History
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile
   },
   {
     path: "/about",

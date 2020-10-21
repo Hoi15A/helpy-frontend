@@ -15,7 +15,20 @@
           <h1 class="title navbar-item">Helpy</h1>
         </div>
 
-        <div class="nav-section"></div>
+        <div class="nav-section">
+          <div class="navbar-end">
+            <div class="navbar-item">
+              Points: [insert here]
+            </div>
+            <div class="profile-picture">
+              <router-link to="/profile">
+                <figure class="image is-48x48 is-centered">
+                  <img class="is-rounded" src="https://payload.cargocollective.com/1/23/749547/12784313/IDK_800.png" alt="Profilbild">
+                </figure>
+              </router-link>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
 
@@ -53,6 +66,10 @@
 
 .nav-section {
   flex: 1;
+}
+
+.profile-picture {
+  margin: 10px;
 }
 
 h1 {

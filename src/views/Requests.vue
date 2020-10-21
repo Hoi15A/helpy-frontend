@@ -1,111 +1,118 @@
 <template>
   <div id="requests">
-    <h2 class="table-label">Vorgeschlagene Anträge</h2>
-    <table class="table is-fullwidth is-hoverable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Helfer/in</th>
-          <th>Matchingdatum</th>
-          <th>Bearbeiten</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in tableData1" v-bind:key="item">
-          <td v-if="!item.editing">{{ item.request_title }}</td>
-          <td v-if="!item.editing">{{ item.helper }}</td>
-          <td v-if="!item.editing">{{ item.match_date }}</td>
 
-          <td v-if="item.editing">
-            <input type="text" class="input" v-model="item.request_title" />
-          </td>
-          <td v-if="item.editing">
-            <input type="text" class="input" v-model="item.helper" />
-          </td>
-          <td v-if="item.editing">
-            <input type="date" class="input" v-model="item.match_date" />
-          </td>
+    <div class="columns is-centered">
+      <div class="column is-three-quarters">
+        <h2 class="table-label">Vorgeschlagene Anträge</h2>
+        <table class="table is-fullwidth is-hoverable">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Helfer/in</th>
+            <th>Matchingdatum</th>
+            <th>Bearbeiten</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(item, index) in tableData1" v-bind:key="item">
+            <td v-if="!item.editing">{{ item.request_title }}</td>
+            <td v-if="!item.editing">{{ item.helper }}</td>
+            <td v-if="!item.editing">{{ item.match_date }}</td>
 
-          <td v-if="!item.editing">
-            <button class="button" v-on:click="item.editing = !item.editing">
-              Bearbeiten
-            </button>
-            <button class="button" v-on:click="removeRow1(index)">
-              Löschen
-            </button>
-          </td>
-          <td v-if="item.editing">
-            <button class="button" v-on:click="item.editing = !item.editing">
-              Speichern
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <td v-if="item.editing">
+              <input type="text" class="input" v-model="item.request_title" />
+            </td>
+            <td v-if="item.editing">
+              <input type="text" class="input" v-model="item.helper" />
+            </td>
+            <td v-if="item.editing">
+              <input type="date" class="input" v-model="item.match_date" />
+            </td>
 
-    <h2 class="table-label">Offene Anträge</h2>
+            <td v-if="!item.editing">
+              <button class="button" v-on:click="item.editing = !item.editing">
+                Bearbeiten
+              </button>
+              <button class="button" v-on:click="removeRow1(index)">
+                Löschen
+              </button>
+            </td>
+            <td v-if="item.editing">
+              <button class="button" v-on:click="item.editing = !item.editing">
+                Speichern
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
 
-    <table class="table is-fullwidth is-hoverable">
-      <thead>
-        <tr>
-          <th>Antrag</th>
-          <th>Helfer/in</th>
-          <th>Erstelldatum</th>
-          <th>Bearbeiten</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in tableData2" v-bind:key="item">
-          <td v-if="!item.editing">{{ item.request_title }}</td>
-          <td v-if="!item.editing">{{ item.helper }}</td>
-          <td v-if="!item.editing">{{ item.create_date }}</td>
+        <h2 class="table-label">Offene Anträge</h2>
 
-          <td v-if="item.editing">
-            <input type="text" class="input" v-model="item.request_title" />
-          </td>
-          <td v-if="item.editing">
-            <input type="text" class="input" v-model="item.helper" />
-          </td>
-          <td v-if="item.editing">
-            <input type="date" class="input" v-model="item.create_date" />
-          </td>
+        <table class="table is-fullwidth is-hoverable">
+          <thead>
+          <tr>
+            <th>Antrag</th>
+            <th>Helfer/in</th>
+            <th>Erstelldatum</th>
+            <th>Bearbeiten</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(item, index) in tableData2" v-bind:key="item">
+            <td v-if="!item.editing">{{ item.request_title }}</td>
+            <td v-if="!item.editing">{{ item.helper }}</td>
+            <td v-if="!item.editing">{{ item.create_date }}</td>
 
-          <td v-if="!item.editing">
-            <button class="button" v-on:click="item.editing = !item.editing">
-              Bearbeiten
-            </button>
-            <button class="button" v-on:click="removeRow2(index)">
-              Löschen
-            </button>
-          </td>
-          <td v-if="item.editing">
-            <button class="button" v-on:click="item.editing = !item.editing">
-              Speichern
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <td v-if="item.editing">
+              <input type="text" class="input" v-model="item.request_title" />
+            </td>
+            <td v-if="item.editing">
+              <input type="text" class="input" v-model="item.helper" />
+            </td>
+            <td v-if="item.editing">
+              <input type="date" class="input" v-model="item.create_date" />
+            </td>
 
-    <h2 class="table-label">Abgeschlossene Anträge</h2>
-    <table class="table is-fullwidth is-hoverable">
-      <thead>
-        <tr>
-          <th>Antrag</th>
-          <th>Helfer/in</th>
-          <th>Erstelldatum</th>
-          <th>Points</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in tableData3" v-bind:key="item">
-          <td v-if="!item.editing">{{ item.request_title }}</td>
-          <td v-if="!item.editing">{{ item.helper }}</td>
-          <td v-if="!item.editing">{{ item.create_date }}</td>
-          <td v-if="!item.editing">{{ item.rating }}</td>
-        </tr>
-      </tbody>
-    </table>
+            <td v-if="!item.editing">
+              <button class="button" v-on:click="item.editing = !item.editing">
+                Bearbeiten
+              </button>
+              <button class="button" v-on:click="removeRow2(index)">
+                Löschen
+              </button>
+            </td>
+            <td v-if="item.editing">
+              <button class="button" v-on:click="item.editing = !item.editing">
+                Speichern
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h2 class="table-label">Abgeschlossene Anträge</h2>
+        <table class="table is-fullwidth is-hoverable">
+          <thead>
+          <tr>
+            <th>Antrag</th>
+            <th>Helfer/in</th>
+            <th>Erstelldatum</th>
+            <th>Points</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="item in tableData3" v-bind:key="item">
+            <td v-if="!item.editing">{{ item.request_title }}</td>
+            <td v-if="!item.editing">{{ item.helper }}</td>
+            <td v-if="!item.editing">{{ item.create_date }}</td>
+            <td v-if="!item.editing">{{ item.rating }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
