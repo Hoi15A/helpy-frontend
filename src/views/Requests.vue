@@ -3,51 +3,7 @@
 
     <div class="columns is-centered">
       <div class="column is-three-quarters">
-        <h2 class="table-label">Vorgeschlagene Anträge</h2>
-        <table class="table is-fullwidth is-hoverable">
-          <thead>
-          <tr>
-            <th>Name</th>
-            <th>Helfer/in</th>
-            <th>Matchingdatum</th>
-            <th>Bearbeiten</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(item, index) in tableData1" v-bind:key="item">
-            <td v-if="!item.editing">{{ item.request_title }}</td>
-            <td v-if="!item.editing">{{ item.helper }}</td>
-            <td v-if="!item.editing">{{ item.match_date }}</td>
-
-            <td v-if="item.editing">
-              <input type="text" class="input" v-model="item.request_title" />
-            </td>
-            <td v-if="item.editing">
-              <input type="text" class="input" v-model="item.helper" />
-            </td>
-            <td v-if="item.editing">
-              <input type="date" class="input" v-model="item.match_date" />
-            </td>
-
-            <td v-if="!item.editing">
-              <button class="button" v-on:click="item.editing = !item.editing">
-                Bearbeiten
-              </button>
-              <button class="button" v-on:click="removeRow1(index)">
-                Löschen
-              </button>
-            </td>
-            <td v-if="item.editing">
-              <button class="button" v-on:click="item.editing = !item.editing">
-                Speichern
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-
-        <h2 class="table-label">Offene Anträge</h2>
-
+        <h2 class="table-label">Laufende Anträge (IN_PROGRESS)</h2>
         <table class="table is-fullwidth is-hoverable">
           <thead>
           <tr>
@@ -58,39 +14,54 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(item, index) in tableData2" v-bind:key="item">
-            <td v-if="!item.editing">{{ item.request_title }}</td>
-            <td v-if="!item.editing">{{ item.helper }}</td>
-            <td v-if="!item.editing">{{ item.create_date }}</td>
+          <tr v-for="(item, index) in inProgressJobs" v-bind:key="item.title">
+            <td>{{ item.title }}</td>
+            <td>{{ item.matchedHelper.firstname }}</td>
+            <td>{{ item.created }}</td>
 
-            <td v-if="item.editing">
-              <input type="text" class="input" v-model="item.request_title" />
-            </td>
-            <td v-if="item.editing">
-              <input type="text" class="input" v-model="item.helper" />
-            </td>
-            <td v-if="item.editing">
-              <input type="date" class="input" v-model="item.create_date" />
-            </td>
-
-            <td v-if="!item.editing">
-              <button class="button" v-on:click="item.editing = !item.editing">
-                Bearbeiten
-              </button>
-              <button class="button" v-on:click="removeRow2(index)">
-                Löschen
-              </button>
-            </td>
-            <td v-if="item.editing">
-              <button class="button" v-on:click="item.editing = !item.editing">
-                Speichern
-              </button>
+            <td>
+              <div class="buttons">
+                <button class="button" @click="deleteJob(inProgressJobs, index)">
+                  Löschen
+                </button>
+                <button disabled class="button">
+                  Bearbeiten (WIP)
+                </button>
+              </div>
             </td>
           </tr>
           </tbody>
         </table>
 
-        <h2 class="table-label">Abgeschlossene Anträge</h2>
+        <h2 class="table-label">Offene Anträge (OPEN)</h2>
+
+        <table class="table is-fullwidth is-hoverable">
+          <thead>
+          <tr>
+            <th>Antrag</th>
+            <th>Erstelldatum</th>
+            <th>Edit</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(item, index) in openJobs" v-bind:key="item">
+            <td>{{ item.title }}</td>
+            <td>{{ item.created }}</td>
+            <td>
+              <div class="buttons">
+                <button class="button" @click="deleteJob(openJobs, index)">
+                  Löschen
+                </button>
+                <button disabled class="button">
+                  Bearbeiten (WIP)
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h2 class="table-label">Abgeschlossene Anträge (CLOSED)</h2>
         <table class="table is-fullwidth is-hoverable">
           <thead>
           <tr>
@@ -101,12 +72,12 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="item in tableData3" v-bind:key="item">
-            <td v-if="!item.editing">{{ item.request_title }}</td>
-            <td v-if="!item.editing">{{ item.helper }}</td>
-            <td v-if="!item.editing">{{ item.create_date }}</td>
-            <td v-if="!item.editing">{{ item.rating }}</td>
-          </tr>
+            <tr v-for="item in closedJobs" v-bind:key="item">
+              <td>{{ item.title }}</td>
+              <td>{{ item.matchedHelper ? item.matchedHelper.firstname : "Kein Helfer" }}</td>
+              <td>{{ item.created }}</td>
+              <td>0</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -121,66 +92,50 @@ export default {
   name: "Requests",
   data: function() {
     return {
-      tableData1: [
-        {
-          request_title: "Brauche Hilfe ein SBB-Abo zu lösen",
-          helper: "Bab Mortin",
-          match_date: "12.12.2020",
-          editing: false
-        },
-        {
-          request_title: "Brauche Hilfe in der Arbeit",
-          helper: "Donald Biden",
-          match_date: "12.12.2020",
-          editing: false
-        },
-        {
-          request_title: "Help, I need somebody, HELP, not just anybody",
-          helper: "Joey Sixpack",
-          match_date: "12.12.2020",
-          editing: false
-        }
-      ],
-      tableData2: [
-        {
-          request_title: "Ich brauche eine Wohnsitzbestätigung",
-          helper: "Rick Astley",
-          create_date: "12.12.2020",
-          editing: false
-        },
-        {
-          request_title: "Hilarys Emails leaked",
-          helper: "Donald Biden",
-          create_date: "12.12.2020",
-          editing: false
-        },
-        {
-          request_title: "Wheres my Ritalin",
-          helper: "Joe Trump",
-          create_date: "12.12.2020",
-          editing: false
-        }
-      ],
-      tableData3: [
-        {
-          request_title: "Im waaaalkin' 'ere",
-          helper: "Cousin Nicky",
-          create_date: "12.12.2020",
-          rating: "5/5",
-          editing: false
-        }
-      ]
+      openJobs: [],
+      inProgressJobs: [],
+      closedJobs: []
     };
   },
   methods: {
-    removeRow1: function(index) {
-      console.log("Removing", index);
-      this.tableData1.splice(index, 1);
+    fetchUserJobs: async function () {
+      let currentUser = "ahmed_miri@gmx.net";
+      let res = await fetch(`http://${this.$baseURL}/api/job/author/${currentUser}`);
+      let jobs = await res.json();
+
+      for (let i = 0; i < jobs.length; i++) {
+        switch (jobs[i].status) {
+          case "OPEN":
+            this.openJobs.push(jobs[i]);
+            break;
+          case "IN_PROGRESS":
+            this.inProgressJobs.push(jobs[i]);
+            break;
+          case "CLOSED":
+            this.closedJobs.push(jobs[i]);
+            break;
+          default:
+            console.error("Job without status was received: ", jobs[i])
+        }
+      }
+
+      console.log(jobs);
     },
-    removeRow2: function(index) {
-      console.log("Removing", index);
-      this.tableData2.splice(index, 1);
+    deleteJob: async function(jobList, i) {
+
+      let res = await fetch(`http://${this.$baseURL}/api/job/remove/${jobList[i].id}`, {
+        method: "DELETE"
+      });
+
+      if (res.ok) {
+        jobList.splice(i, 1);
+      } else {
+        alert("Unable to delete job");
+      }
     }
+  },
+  beforeMount: function() {
+    this.fetchUserJobs();
   }
 };
 </script>
