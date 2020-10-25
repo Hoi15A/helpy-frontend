@@ -23,16 +23,16 @@ export default {
   name: "Home",
   data: function() {
     return {
-      user: {
-        firstname: "aaaaa",
-        lastname: "aaaaaa",
-        email: "aa@aa.aa",
-        password: "aaaaaaaaa",
-        birthdate: "",
-        plz: 8032,
-        sex: "g",
-        biographie: "null",
-        status: "ACTIVE",
+      user: { // TODO: This is just copy pasted stuff from the db directly, map to actual input
+        type: "Helpseeker",
+        email: "ahmed_miri@gmx.net",
+        firstname: "Ahmed",
+        lastname: "Miri",
+        sex: "M",
+        plz: 8400,
+        birthdate: "2003-01-05",
+        biographie: "Ich heisse Ahmed und bin 17 Jahre alt und bin seit 2015 in der Schweiz und komme aus Afghanistan. Ich wohne in Winterthur und gehe im Moment in die 10. Klasse. Ich schaue gerne Fussball und spiele beim SC Veltheim in der U19 2. Mannschaft. Ich habe Probleme mit Schreiben und Lesen von wichtigen Papieren in der Schweiz und verstehe sie nicht alle.",
+        status: "INACTIVE",
         permission: "USER"
       }
     };
