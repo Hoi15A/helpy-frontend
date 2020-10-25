@@ -24,12 +24,12 @@
             </div>
 
             <div class="navbar-item">
-              Points: [insert here]
+              Points: 0 <!-- TODO: alter when points implemented in backend -->
             </div>
             <div class="profile-picture">
               <router-link to="/profile">
                 <figure class="image is-48x48 is-centered">
-                  <img class="is-rounded" src="https://payload.cargocollective.com/1/23/749547/12784313/IDK_800.png" alt="Profilbild">
+                  <img class="is-rounded" src="http://www.colegiodepadua.com.br/img/user.png" alt="Profilbild">
                 </figure>
               </router-link>
             </div>

@@ -4,6 +4,8 @@ import router from "./router";
 
 Vue.config.productionTip = false;
 
+Vue.prototype.$baseURL = "localhost:8081"; // TODO: Find a more suitable place for this config
+
 new Vue({
   router,
   render: h => h(App)
