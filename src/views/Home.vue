@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <h1>Willkommen Max Mustermann</h1>
+    <h1>Willkommen {{username}}</h1>
     <hr>
     <div class="info-text">
       <p>Neue Matches:</p>
@@ -43,9 +43,23 @@ export default {
         { name: "Bob Martin", age: 9, rank: 1, points: 12, editing: false },
         { name: "Mob Bartin", age: 11, rank: 2, points: 11, editing: false },
         { name: "Schlob Klartin", age: 12, rank: 3, points: 1, editing: false },
-        ]
+        ],
+      username: ""
     };
   },
+  methods: {
+    fetchUser: async function () {
+      let currentUser = "ahmed_miri@gmx.net";
+      let res = await fetch(`http://${this.$baseURL}/api/user/${currentUser}`);
+      let user = await res.json();
+
+      // TODO: This is not efficient, user should be stored once on login and reused to reduce requests
+      this.username = user.firstname + " " + user.lastname;
+    }
+  },
+  beforeMount: function() {
+    this.fetchUser();
+  }
 };
 
 </script>
@@ -74,18 +88,3 @@ label {
   font-size: 1.5em;
 }
 </style>
-
-<!--
-<script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
-export default {
-  name: "Home",
-  components: {
-    HelloWorld
-  }
-};
-</script>
-!-->
-
