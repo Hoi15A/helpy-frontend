@@ -2,19 +2,56 @@
   <div id="register">
     <h1>Register</h1>
     <div class="register-form">
-      <input type="text" name="surname"  placeholder="Vorname" />
-      <input type="text" name="lastname"  placeholder="Nachname" />
-      <input type="email" name="email"  placeholder="Email" />
-      <input type="password" name="password"  placeholder="Passwort" />
-      <input type="password" name="password-repeat"  placeholder="Passwort wiederholen" />
-      <input type="date" id="date of birth" name="date-of-birth"  placeholder="Geburtsdatum" />
+      <input type="text" class="input" v-model="user.firstname" name="firstname"  placeholder="Vorname" />
+      <input type="text" class="input" v-model="user.lastname" name="lastname"  placeholder="Nachname" />
+      <input type="email" class="input" v-model="user.email" name="email"  placeholder="Email" />
+      <input type="password" class="input" v-model="user.password" name="password"  placeholder="Passwort" />
+      <input type="password" class="input" name="password-repeat"  placeholder="Passwort wiederholen" />
+      <input type="date" class="input" v-model="user.birthdate" id="date of birth" name="date-of-birth"  placeholder="Geburtsdatum" />
       <div class="buttons">
         <button type="button" v-on:click="registerUser()">Registrieren</button>
-        <button type="button" v-on:click="cancel()">Abbrechen</button>
+        <router-link to="/">
+          <button type="button">Abbrechen</button>
+        </router-link>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: "Home",
+  data: function() {
+    return {
+      user: {
+        firstname: "aaaaa",
+        lastname: "aaaaaa",
+        email: "aa@aa.aa",
+        password: "aaaaaaaaa",
+        birthdate: "",
+        plz: 8032,
+        sex: "g",
+        biographie: "null",
+        status: "ACTIVE",
+        permission: "USER"
+      }
+    };
+  },
+  methods: {
+    registerUser: async function() {
+      let res = await fetch(`http://${this.$baseURL}/api/user/add`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(this.user)
+      });
+      console.log(res);
+    }
+  }
+};
+
+</script>
 
 <style>
 
@@ -29,12 +66,6 @@
   display: flex;
   width: 30%;
   flex-direction: column;
-}
-
-.register-form input {
-  padding: 5px 0px 5px 0px;
-  margin: 3px 0px 3px 0px;
-
 }
 
 .buttons {
