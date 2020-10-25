@@ -66,7 +66,7 @@
 
         <div class="level">
           <div class="level-left">
-            <button disabled class="button is-danger">Löschen</button>
+            <button class="button is-danger" @click="deleteUser()">Löschen</button>
           </div>
           <div class="level-right">
             <div class="buttons">
@@ -130,6 +130,11 @@ export default {
     saveUser: async function (user) {
       user.type = user.helper ? "Helper" : "Helpseeker";
       let currentUser = "ahmed_miri@gmx.net";
+
+      if (this.displayedProfile.password === "") {
+        delete this.displayedProfile.password;
+      }
+
       let res = await fetch(`http://${this.$baseURL}/api/user/update/${currentUser}`, {
         method: "PUT",
         headers: {
@@ -140,6 +145,19 @@ export default {
 
       console.log(res);
 
+    },
+    deleteUser: async function() {
+      let res = await fetch(`http://${this.$baseURL}/api/user/remove/${this.displayedProfile.email}`, {
+        method: "DELETE"
+      });
+
+      if (res.ok) {
+        alert("User gon");
+        await this.$router.push("/register");
+      } else {
+        alert("Something fucked up");
+        console.error(res);
+      }
     }
   },
   beforeMount: async function() {
