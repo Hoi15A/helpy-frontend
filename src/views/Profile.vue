@@ -32,6 +32,17 @@
         </div>
 
         <div class="field has-text-left">
+          <label class="label">Freie Tage</label>
+          <div class="control">
+            <div class="select is-multiple is-fullwidth">
+              <select multiple size="3" v-model="displayedProfile.availableWeekDays">
+                <option v-for="weekday in availableDates" :key="weekday" :value="weekday">{{weekday}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field has-text-left">
           <label class="label">Ich will helfen</label>
           <switch-checkbox v-model="displayedProfile.helper"></switch-checkbox>
         </div>
@@ -95,10 +106,12 @@ export default {
         password: "",
         passwordRepeat: "",
         helper: false,
+        availableWeekDays: [],
         categories: [],
         tags: "", // TODO: has to be array later
         bio: ""
       },
+      availableDates: ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
       availableCategories: [],
       selectedCategories: []
     }
@@ -129,8 +142,9 @@ export default {
     },
     saveUser: async function (user) {
       user.type = user.helper ? "Helper" : "Helpseeker";
-      let currentUser = "ahmed_miri@gmx.net";
+      user.availableWeekDays = user.availableWeekDays.map(day => this.availableDates.indexOf(day));
 
+      let currentUser = "ahmed_miri@gmx.net";
       if (this.displayedProfile.password === "") {
         delete this.displayedProfile.password;
       }
