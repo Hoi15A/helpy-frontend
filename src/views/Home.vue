@@ -21,7 +21,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="item in tableData" v-bind:key="item">
+      <tr v-for="item in tableData" v-bind:key="item.value">
         <td v-if="!item.editing">{{item.name}}</td>
         <td v-if="!item.editing">{{item.age}}</td>
         <td v-if="!item.editing">{{item.rank}}</td>

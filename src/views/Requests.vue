@@ -14,10 +14,10 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(item, index) in inProgressJobs" v-bind:key="item.title">
-            <td>{{ item.title }}</td>
-            <td>{{ item.matchedHelper.firstname }}</td>
-            <td>{{ item.created }}</td>
+          <tr v-for="(inProgressJob, index) in inProgressJobs" v-bind:key="inProgressJob.index">
+            <td>{{ inProgressJob.title }}</td>
+            <td>{{ inProgressJob.matchedHelper.firstname }}</td>
+            <td>{{ inProgressJob.created }}</td>
 
             <td>
               <div class="buttons">
@@ -44,9 +44,9 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(item, index) in openJobs" v-bind:key="item">
-            <td>{{ item.title }}</td>
-            <td>{{ item.created }}</td>
+          <tr v-for="(openJob, index) in openJobs" v-bind:key="openJob.index">
+            <td>{{ openJob.title }}</td>
+            <td>{{ openJob.created }}</td>
             <td>
               <div class="buttons">
                 <button class="button" @click="deleteJob(openJobs, index)">
@@ -72,10 +72,10 @@
           </tr>
           </thead>
           <tbody>
-            <tr v-for="item in closedJobs" v-bind:key="item">
-              <td>{{ item.title }}</td>
-              <td>{{ item.matchedHelper ? item.matchedHelper.firstname : "Kein Helfer" }}</td>
-              <td>{{ item.created }}</td>
+            <tr v-for="closedJob in closedJobs" v-bind:key="closedJob.value">
+              <td>{{ closedJob.title }}</td>
+              <td>{{ closedJob.matchedHelper ? closedJob.firstname : "Kein Helfer" }}</td>
+              <td>{{ closedJob.created }}</td>
               <td>0</td>
             </tr>
           </tbody>
