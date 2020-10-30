@@ -30,6 +30,13 @@
         </div>
 
         <div class="field">
+          <label class="label">Ablaufdatum</label>
+          <div class="control">
+            <input class="input" v-model="request.dueDate" type="date" placeholder="Verfügbarkeit">
+          </div>
+        </div>
+
+        <div class="field">
           <label class="label">Beschreibung</label>
           <div class="control">
             <textarea class="textarea" v-model="request.description" placeholder="Ich brauche hilfe mit ..."></textarea>
@@ -89,6 +96,7 @@ export default {
         title: "",
         categories: [],
         tags: [],
+        dueDate: "",
         description: ""
       },
       availableCategories: [],
