@@ -147,7 +147,7 @@ export default {
 
       if (res.ok) {
         this.isModalOpen = false;
-        this.$router.push("/requests");
+        await this.$router.push("/requests");
       } else {
         alert("something went wrong, see console");
         console.log(res);
