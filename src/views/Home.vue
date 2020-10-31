@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import api from "@/api";
+
 export default {
   name: "Home",
   data: function() {
@@ -49,11 +51,7 @@ export default {
   },
   methods: {
     fetchUser: async function () {
-      let currentUser = "ahmed_miri@gmx.net";
-      let res = await fetch(`http://${this.$baseURL}/api/user/${currentUser}`);
-      let user = await res.json();
-
-      // TODO: This is not efficient, user should be stored once on login and reused to reduce requests
+      let user = api.getCurrentUser();
       this.username = user.firstname + " " + user.lastname;
     }
   },
