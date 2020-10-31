@@ -87,6 +87,8 @@
 </template>
 
 <script>
+import api from "@/api";
+
 export default {
   name: "CreateRequest",
   data: function() {
@@ -106,61 +108,42 @@ export default {
     }
   },
   methods: {
-    fetchCategories: async function () {
-      let res = await fetch(`http://${this.$baseURL}/api/category/all`);
-      this.availableCategories = await res.json();
-    },
     saveRequest: async function () {
-      this.request.author = await this.fetchUser();
-      let res = await fetch(`http://${this.$baseURL}/api/job/add`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify(this.request)
-      });
+      this.request.author = await api.getCurrentUser();
 
-      if (res.ok) {
-        this.currentJob = await res.json();
+      try {
+        this.currentJob = await api.addJob(this.request);
 
-        let matchRes = await fetch(`http://${this.$baseURL}/api/job/id/${this.currentJob.id}/find-helper`);
-
-        if (matchRes.ok) {
-          this.availableMatches = await matchRes.json();
+        try {
+          this.availableMatches = await api.findHelperForJobId(this.currentJob.id);
           this.isModalOpen = true;
-        } else {
-          alert("something went wrong, see console");
-          console.log(matchRes);
+        } catch (e) {
+          // TODO: Tell user that no match was found
+          console.error(e);
         }
 
-      } else {
-        alert("something went wrong, see console");
-        console.log(res);
+      } catch (e) {
+        // TODO: Tell user that job failed to add
+        console.error(e);
       }
-
-      console.log(res);
     },
     selectHelper: async function (helper) {
-      let res = await fetch(`http://${this.$baseURL}/api/job/id/${this.currentJob.id}/set-helper/${helper.email}`, {
-        method: "PUT"
-      });
 
-      if (res.ok) {
-        this.isModalOpen = false;
+      try {
+        await api.setHelperForJobId(this.currentJob.id, helper.email);
+
         await this.$router.push("/requests");
-      } else {
-        alert("something went wrong, see console");
-        console.log(res);
+      } catch (e) {
+        // TODO: Inform user about failure
+        console.error(e);
+      } finally {
+        this.isModalOpen = false;
       }
-    },
-    fetchUser: async function () { // TODO: Same as everywhere else, make user cached
-      let currentUser = "ahmed_miri@gmx.net";
-      let res = await fetch(`http://${this.$baseURL}/api/user/${currentUser}`);
-      return res.json();
+
     },
   },
-  beforeMount: function() {
-    this.fetchCategories();
+  beforeMount: async function() {
+    this.availableCategories = await api.fetchCategories();
   }
 };
 </script>
