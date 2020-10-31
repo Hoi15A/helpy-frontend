@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import api from "@/api";
+
 export default {
   name: "Home",
   data: function() {
@@ -39,14 +41,7 @@ export default {
   },
   methods: {
     registerUser: async function() {
-      let res = await fetch(`http://${this.$baseURL}/api/user/add`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify(this.user)
-      });
-      console.log(res);
+      await api.register(this.user);
     }
   }
 };
