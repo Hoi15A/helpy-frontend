@@ -154,6 +154,13 @@ export default {
             throw new Error(`No helpers found for job:\n${id}`);
         }
     },
+    /**
+     * Assigns helper to a job
+     *
+     * @param jobId
+     * @param helperEmail
+     * @returns {Promise<void>}
+     */
     setHelperForJobId: async function (jobId, helperEmail) {
         let res = await fetch(`${apiBaseUrl}/job/id/${jobId}/set-helper/${helperEmail}`, {
             method: "PUT"
