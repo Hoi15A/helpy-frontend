@@ -93,6 +93,7 @@
 
 <script>
 import SwitchCheckbox from "@/components/SwitchCheckbox";
+import api from "@/api";
 
 export default {
   name: "Profile",
@@ -124,59 +125,37 @@ export default {
     }
   },
   methods: {
-    fetchUser: async function () { // TODO: This is used in many places. Put it somewhere more global & cache in localstorage
-      let currentUser = "ahmed_miri@gmx.net";
-      let res = await fetch(`http://${this.$baseURL}/api/user/${currentUser}`);
-      let user = await res.json();
-
-      user.password = "";
-      this.displayedProfile.passwordRepeat = "";
-
-      this.displayedProfile.helper = user.status === "ACTIVE";
-
-      return user;
-    },
-    fetchCategories: async function () { // TODO: Put it more global
-      let res = await fetch(`http://${this.$baseURL}/api/category/all`);
-      return res.json();
-    },
     saveUser: async function (user) {
       user.type = user.helper ? "Helper" : "Helpseeker";
       user.availableWeekDays = user.availableWeekDays.map(day => this.availableDates.indexOf(day));
 
-      let currentUser = "ahmed_miri@gmx.net";
       if (this.displayedProfile.password === "") {
         delete this.displayedProfile.password;
       }
 
-      let res = await fetch(`http://${this.$baseURL}/api/user/update/${currentUser}`, {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify(this.displayedProfile)
-      });
-
-      console.log(res);
-
+      try {
+        await api.updateCurrentUser(this.displayedProfile)
+      } catch (e) {
+        console.error(e);
+      }
     },
     deleteUser: async function() {
-      let res = await fetch(`http://${this.$baseURL}/api/user/remove/${this.displayedProfile.email}`, {
-        method: "DELETE"
-      });
-
-      if (res.ok) {
-        alert("User gon");
+      try {
+        await api.deleteUserByEmail(this.displayedProfile.email);
+        console.log("User deleted")
         await this.$router.push("/register");
-      } else {
-        alert("Something fucked up");
-        console.error(res);
+      } catch (e) {
+        console.error(e);
       }
     }
   },
   beforeMount: async function() {
-    this.availableCategories = await this.fetchCategories();
-    this.displayedProfile = await this.fetchUser();
+    this.availableCategories = await api.fetchCategories();
+    try {
+      this.displayedProfile = await api.getCurrentUser();
+    } catch (e) {
+      await this.$router.push("/login");
+    }
   }
 }
 </script>
