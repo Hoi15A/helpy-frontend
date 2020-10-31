@@ -88,6 +88,9 @@
 </template>
 
 <script>
+
+import api from "@/api";
+
 export default {
   name: "Requests",
   data: function() {
@@ -98,10 +101,8 @@ export default {
     };
   },
   methods: {
-    fetchUserJobs: async function () {
-      let currentUser = "ahmed_miri@gmx.net";
-      let res = await fetch(`http://${this.$baseURL}/api/job/author/${currentUser}`);
-      let jobs = await res.json();
+    loadUserJobs: async function () {
+      let jobs = await api.fetchCurrentUserJobs();
 
       for (let i = 0; i < jobs.length; i++) {
         switch (jobs[i].status) {
@@ -122,20 +123,16 @@ export default {
       console.log(jobs);
     },
     deleteJob: async function(jobList, i) {
-
-      let res = await fetch(`http://${this.$baseURL}/api/job/remove/${jobList[i].id}`, {
-        method: "DELETE"
-      });
-
-      if (res.ok) {
+      try {
+        await api.deleteJobById(jobList[i].id);
         jobList.splice(i, 1);
-      } else {
-        alert("Unable to delete job");
+      } catch (e) {
+        console.error(e);
       }
     }
   },
   beforeMount: function() {
-    this.fetchUserJobs();
+    this.loadUserJobs();
   }
 };
 </script>
