@@ -77,6 +77,7 @@
               </table>
             </section>
             <footer class="modal-card-foot">
+              <button class="button" @click="$router.push('/')">Abbrechen</button>
             </footer>
           </div>
         </div>
