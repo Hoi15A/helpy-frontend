@@ -161,11 +161,7 @@ export default {
       try {
           this.availableMatches = await api.findHelperForJobId(this.openJobs[i].id);
           this.isModalOpen = true;
-            if(this.availableMatches.length < 1) {
-              this.helperFound = false;
-            } else {
-              this.helperFound = true;
-            }
+          this.helperFound = ((this.availableMatches.length >= 1))
         } catch (e) {
           // TODO: Tell user that no match was found
           console.error(e);
