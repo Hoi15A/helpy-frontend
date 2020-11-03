@@ -98,12 +98,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in availableMatches" v-bind:key="item">
+            <tr v-for="(item, index) in availableMatches" v-bind:key="item">
               <td>{{ item.firstname + " " + item.lastname }}</td>
               <td>{{ item.biographie }}</td>
               <td>{{ item.plz }}</td>
               <td>
-                <button class="button" @click="selectHelper(item)">Auswählen</button>
+                <button class="button" @click="selectHelper(openJobs, index, item)">Auswählen</button>
               </td>
             </tr>
             </tbody>
