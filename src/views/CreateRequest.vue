@@ -52,10 +52,11 @@
           <div class="modal-background"></div>
           <div class="modal-card">
             <header class="modal-card-head">
-              <p class="modal-card-title">Helper gefunden!</p>
+              <p class="modal-card-title" v-if="helperFound">Helper gefunden!</p>
+              <p class="modal-card-title" v-else>Es wurde leider noch kein Helfer für Sie gefunden</p>
             </header>
             <section class="modal-card-body">
-              <table class="table is-fullwidth is-hoverable">
+              <table class="table is-fullwidth is-hoverable" v-if="helperFound">
                 <thead>
                 <tr>
                   <th>Helfer/in</th>
@@ -75,8 +76,10 @@
                 </tr>
                 </tbody>
               </table>
+              <p class="modal-card-body" v-else>Sie können ihren Antrag unter Anträge nochmals matchen</p>
             </section>
             <footer class="modal-card-foot">
+              <button class="button" @click="$router.push('/requests')" v-if="!helperFound">Anträge</button>
               <button class="button" @click="$router.push('/')">Abbrechen</button>
             </footer>
           </div>
@@ -105,7 +108,8 @@ export default {
       availableCategories: [],
       availableMatches: [],
       currentJob: {},
-      isModalOpen: false
+      isModalOpen: false,
+      helperFound: false
     }
   },
   methods: {
@@ -118,6 +122,11 @@ export default {
         try {
           this.availableMatches = await api.findHelperForJobId(this.currentJob.id);
           this.isModalOpen = true;
+          if(this.availableMatches.length < 1) {
+            this.helperFound = false;
+          } else {
+            this.helperFound = true;
+          }
         } catch (e) {
           // TODO: Tell user that no match was found
           console.error(e);
