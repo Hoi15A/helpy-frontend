@@ -84,10 +84,11 @@
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Helper gefunden!</p>
+          <p class="modal-card-title" v-if="helperFound">Helper gefunden!</p>
+          <p class="modal-card-title" v-else>Es wurde leider noch kein Helfer für Sie gefunden</p>
         </header>
         <section class="modal-card-body">
-          <table class="table is-fullwidth is-hoverable">
+          <table class="table is-fullwidth is-hoverable" v-if="helperFound">
             <thead>
             <tr>
               <th>Helfer/in</th>
@@ -107,6 +108,7 @@
             </tr>
             </tbody>
           </table>
+          <p class="modal-card-body" v-else>Sie können ihren Antrag unter Anträge nochmals matchen</p>
         </section>
         <footer class="modal-card-foot">
           <button class="button" @click="isModalOpen=false">Schliessen</button>
@@ -130,6 +132,7 @@ export default {
       availableMatches: [],
       closedJobs: [],
       isModalOpen: false,
+      helperFound: false,
     };
   },
   methods: {
@@ -157,13 +160,28 @@ export default {
     findMatch: async function(openJobs, i) {
       try {
           this.availableMatches = await api.findHelperForJobId(this.openJobs[i].id);
-          if(this.availableMatches.length > 0) {
-            this.isModalOpen = true;
-          }
+          this.isModalOpen = true;
+            if(this.availableMatches.length < 1) {
+              this.helperFound = false;
+            } else {
+              this.helperFound = true;
+            }
         } catch (e) {
           // TODO: Tell user that no match was found
           console.error(e);
         }
+    },
+    selectHelper: async function (openJobs, i, item) {
+      try {
+        await api.setHelperForJobId(this.openJobs[i].id, item.email);
+        await this.$router.go()
+
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.isModalOpen = false;
+      }
+
     },
     deleteJob: async function(jobList, i) {
       try {
