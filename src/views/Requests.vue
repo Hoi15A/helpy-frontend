@@ -109,7 +109,7 @@
           </table>
         </section>
         <footer class="modal-card-foot">
-          <button class="button" @click="isModalOpen = false">Abbrechen</button>
+          <button class="button" @click="isModalOpen=false">Schliessen</button>
         </footer>
       </div>
     </div>

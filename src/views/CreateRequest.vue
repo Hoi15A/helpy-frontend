@@ -80,7 +80,7 @@
             </section>
             <footer class="modal-card-foot">
               <button class="button" @click="$router.push('/requests')" v-if="!helperFound">Anträge</button>
-              <button class="button" @click="$router.push('/')">Abbrechen</button>
+              <button class="button" @click="$router.push('/')">Schliessen</button>
             </footer>
           </div>
         </div>
