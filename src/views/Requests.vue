@@ -3,49 +3,91 @@
 
     <div class="columns is-centered">
       <div class="column is-three-quarters">
-        <h2 class="table-label">Laufende Anträge (IN_PROGRESS)</h2>
+
+
+        <div class="tabs is-medium">
+          <ul>
+            <li><a href="#" @click.prevent="selectedRole = 'HelpSeeker'">Ich suche Hilfe</a></li>
+            <li><a href="#" @click.prevent="selectedRole = 'Helper'">Ich leiste Hilfe</a></li>
+          </ul>
+        </div>
+
+
+        <div v-if="selectedRole === 'Helper'">
+          <h2 class="has-text-left table-label">Anträge als Helfer</h2>
+          <table class="table is-fullwidth is-hoverable">
+            <thead class="has-text-left">
+            <tr>
+              <th>Antrag</th>
+              <th>Helfer/in</th>
+              <th>Erstelldatum</th>
+              <th class="has-text-centered">Bearbeiten</th>
+            </tr>
+            </thead>
+            <tbody class="has-text-left">
+            <tr v-for="(currentHelperJobs, index) in currentHelperJobs" v-bind:key="currentHelperJobs.index">
+              <td>{{ currentHelperJobs.title }}</td>
+              <td>{{ currentHelperJobs.matchedHelper.firstname }}</td>
+              <td>{{ currentHelperJobs.created }}</td>
+
+              <td>
+                <div class="buttons">
+                  <button class="button" @click="deleteJob(currentHelperJobs, index)">Löschen</button>
+                  <button disabled class="button">Bearbeiten (WIP)</button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div v-if="selectedRole === 'HelpSeeker'">
+          <h2 class="has-text-left table-label">Laufende Anträge (IN_PROGRESS)</h2>
+          <table class="table is-fullwidth is-hoverable">
+            <thead class="has-text-left">
+            <tr>
+              <th>Antrag</th>
+              <th>Helfer/in</th>
+              <th>Erstelldatum</th>
+              <th class="has-text-centered">Bearbeiten</th>
+            </tr>
+            </thead>
+            <tbody class="has-text-left">
+            <tr v-for="(inProgressJob, index) in inProgressJobs" v-bind:key="inProgressJob.index">
+              <td>{{ inProgressJob.title }}</td>
+              <td>{{ inProgressJob.matchedHelper.firstname }}</td>
+              <td>{{ inProgressJob.created }}</td>
+
+              <td>
+                <div class="buttons">
+                  <button class="button" @click="deleteJob(inProgressJobs, index)">
+                    Löschen
+                  </button>
+                  <button disabled class="button">
+                    Bearbeiten (WIP)
+                  </button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div v-if="selectedRole === 'HelpSeeker'">
+        <h2 class="has-text-left table-label">Offene Anträge (OPEN)</h2>
         <table class="table is-fullwidth is-hoverable">
-          <thead>
+          <thead class="has-text-left">
           <tr>
             <th>Antrag</th>
             <th>Helfer/in</th>
             <th>Erstelldatum</th>
-            <th>Bearbeiten</th>
+            <th class="has-text-centered">Bearbeiten</th>
           </tr>
           </thead>
-          <tbody>
-          <tr v-for="(inProgressJob, index) in inProgressJobs" v-bind:key="inProgressJob.index">
-            <td>{{ inProgressJob.title }}</td>
-            <td>{{ inProgressJob.matchedHelper.firstname }}</td>
-            <td>{{ inProgressJob.created }}</td>
-
-            <td>
-              <div class="buttons">
-                <button class="button" @click="deleteJob(inProgressJobs, index)">
-                  Löschen
-                </button>
-                <button disabled class="button">
-                  Bearbeiten (WIP)
-                </button>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-
-        <h2 class="table-label">Offene Anträge (OPEN)</h2>
-
-        <table class="table is-fullwidth is-hoverable">
-          <thead>
-          <tr>
-            <th>Antrag</th>
-            <th>Erstelldatum</th>
-            <th>Edit</th>
-          </tr>
-          </thead>
-          <tbody>
+          <tbody class="has-text-left">
           <tr v-for="(openJob, index) in openJobs" v-bind:key="openJob.index">
             <td>{{ openJob.title }}</td>
+            <td>{{ "Unbekannt" }}</td>
             <td>{{ openJob.created }}</td>
             <td>
               <div class="buttons">
@@ -57,10 +99,11 @@
           </tr>
           </tbody>
         </table>
+        </div>
 
-        <h2 class="table-label">Abgeschlossene Anträge (CLOSED)</h2>
+        <h2 class="has-text-left table-label">Abgeschlossene Anträge (CLOSED)</h2>
         <table class="table is-fullwidth is-hoverable">
-          <thead>
+          <thead class="has-text-left">
           <tr>
             <th>Antrag</th>
             <th>Helfer/in</th>
@@ -68,7 +111,7 @@
             <th>Points</th>
           </tr>
           </thead>
-          <tbody>
+          <tbody class="has-text-left">
             <tr v-for="closedJob in closedJobs" v-bind:key="closedJob.value">
               <td>{{ closedJob.title }}</td>
               <td>{{ closedJob.matchedHelper ? closedJob.firstname : "Kein Helfer" }}</td>
@@ -131,13 +174,21 @@ export default {
       inProgressJobs: [],
       availableMatches: [],
       closedJobs: [],
+      currentHelperJobs: [],
       isModalOpen: false,
       helperFound: false,
+      selectedRole: 'Helper'
     };
   },
   methods: {
     loadUserJobs: async function () {
+
       let jobs = await api.fetchCurrentUserJobs();
+      let helperJobs = await api.fetchCurrentHelperJobs();
+
+      for (let i = 0; i < helperJobs.length; i++) {
+        this.currentHelperJobs.push(helperJobs[i]);
+      }
 
       for (let i = 0; i < jobs.length; i++) {
         switch (jobs[i].status) {
@@ -197,8 +248,7 @@ export default {
 <style scoped>
 .table-label {
   margin-bottom: 40px;
-  margin-top: 70px;
-  font-size: 1.5em;
+  margin-top: 40px;
 }
 #requests {
   display: flex;

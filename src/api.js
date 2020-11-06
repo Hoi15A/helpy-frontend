@@ -96,6 +96,11 @@ export default {
         let res = await fetch(`${apiBaseUrl}/job/author/${currentUser.email}`);
         return res.json();
     },
+    fetchCurrentHelperJobs: async function () {
+        let currentUser = this.getCurrentUser();
+        let res = await fetch(`${apiBaseUrl}/job/helper/${currentUser.email}`);
+        return res.json();
+    },
     /**
      * Deletes a job using its id
      *
