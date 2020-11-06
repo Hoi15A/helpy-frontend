@@ -2,49 +2,115 @@
   <div class="history">
     <div class="columns is-centered">
       <div class="column is-three-quarters">
-        <h1>Verlauf</h1>
-        <table class="table is-fullwidth is-hoverable">
-          <thead>
-          <tr>
-            <th scope="col">Antrag</th>
-            <th scope="col">Geholfene/r</th>
-            <th scope="col">Bewertung</th>
-            <th scope="col">Punkte</th>
-          </tr>
-          </thead>
-          <tbody>
-            <tr v-for="entry in historyItems" :key="entry">
-              <td>{{entry.antrag}}</td>
-              <td>{{entry.helpseeker}}</td>
-              <td>{{entry.rating}}</td>
-              <td>{{entry.points}} Punkte</td>
+
+        <div class="tabs is-medium">
+          <ul>
+            <li><a href="#" @click.prevent="selectedRole = 'HelpSeeker'">Ich suche Hilfe</a></li>
+            <li><a href="#" @click.prevent="selectedRole = 'Helper'">Ich leiste Hilfe</a></li>
+          </ul>
+        </div>
+        <div v-if="this.selectedRole === 'HelpSeeker'">
+          <h2 class="has-text-left table-label">Abgeschlossene Anträge (CLOSED)</h2>
+          <table class="table is-fullwidth is-hoverable">
+            <thead class="has-text-left">
+            <tr>
+              <th>Antrag</th>
+              <th>Helfer/in</th>
+              <th>Erstelldatum</th>
+              <th>Points</th>
             </tr>
-          </tbody>
-        </table>
+            </thead>
+            <tbody class="has-text-left">
+            <tr v-for="closedJob in closedJobs" v-bind:key="closedJob.value">
+              <td>{{ closedJob.title }}</td>
+              <td>{{ closedJob.matchedHelper ? closedJob.firstname : "Kein Helfer" }}</td>
+              <td>{{ closedJob.created }}</td>
+              <td>0</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+        <div v-if="this.selectedRole === 'Helper'">
+          <h2 class="has-text-left table-label">Abgeschlossene Anträge als Helper(CLOSED)</h2>
+          <table class="table is-fullwidth is-hoverable">
+            <thead class="has-text-left">
+            <tr>
+              <th>Titel</th>
+              <th>Helfer/in</th>
+              <th>Erstelldatum</th>
+              <th>Points</th>
+            </tr>
+            </thead>
+            <tbody class="has-text-left">
+            <tr v-for="closedJobAsHelper in closedJobsAsHelper" v-bind:key="closedJobAsHelper.value">
+              <td>{{ closedJobAsHelper.title }}</td>
+              <td>{{ closedJobAsHelper.matchedHelper ? closedJobAsHelper.firstname : "Kein Helfer" }}</td>
+              <td>{{ closedJobAsHelper.created }}</td>
+              <td>{{ "Points" }}</td>
+              <td>0</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import api from "@/api";
+
 export default {
   name: "History",
   data: function () {
     return {
-      historyItems: []
+      closedJobs: [],
+      closedJobsAsHelper: [],
+      jobsCollector: [],
+      selectedRole: true
     }
   },
+  methods: {
+    loadUserJobs: async function () {
+
+      let jobs = await api.fetchCurrentUserJobs();
+      let helperJobs = await api.fetchCurrentHelperJobs();
+
+      for (let i = 0; i < helperJobs.length; i++) {
+        switch (helperJobs[i].status) {
+          case "CLOSED":
+            this.closedJobsAsHelper.push(helperJobs[i]);
+            break;
+          default:
+            this.jobsCollector.push(helperJobs[i]);
+        }
+      }
+
+      for (let i = 0; i < jobs.length; i++) {
+        switch (jobs[i].status) {
+          case "CLOSED":
+            this.closedJobs.push(jobs[i]);
+            break;
+          default:
+            this.jobsCollector.push(jobs[i]);
+        }
+      }
+
+      console.log(jobs);
+    },
+  },
   beforeMount: function() {
-    setTimeout(() => {
-      this.historyItems = [
-        { antrag: "Ich brauche Hilfe ein SBB-Jahresabo zu lösen", helpseeker: "Max Musterfrau", rating: 7, points: 12},
-        { antrag: "Ich brauche Hilfe ein ZVV-Jahresabo zu lösen", helpseeker: "Max Mustermann", rating: 4, points: 122},
-        { antrag: "Ich brauche Hilfe ein DB-Jahresabo zu lösen", helpseeker: "Maxine Musterfrau", rating: 5, points: 4},
-        { antrag: "Ich brauche Hilfe ein TGV-Jahresabo zu lösen", helpseeker: "Chad Thundercock", rating: 1, points: 0}
-      ];
-    }, 1000);
+    this.loadUserJobs();
   }
-};
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+.table-label {
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+</style>
