@@ -100,26 +100,6 @@
           </tbody>
         </table>
         </div>
-
-        <h2 class="has-text-left table-label">Abgeschlossene Anträge (CLOSED)</h2>
-        <table class="table is-fullwidth is-hoverable">
-          <thead class="has-text-left">
-          <tr>
-            <th>Antrag</th>
-            <th>Helfer/in</th>
-            <th>Erstelldatum</th>
-            <th>Points</th>
-          </tr>
-          </thead>
-          <tbody class="has-text-left">
-            <tr v-for="closedJob in closedJobs" v-bind:key="closedJob.value">
-              <td>{{ closedJob.title }}</td>
-              <td>{{ closedJob.matchedHelper ? closedJob.firstname : "Kein Helfer" }}</td>
-              <td>{{ closedJob.created }}</td>
-              <td>0</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
 
