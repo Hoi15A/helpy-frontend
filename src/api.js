@@ -1,3 +1,5 @@
+import router from "./router";
+
 const apiBaseUrl = process.env.NODE_ENV === "production" ? "http://helpyProd.example.com/api" : "http://localhost:8080/api";
 
 export default {
@@ -6,8 +8,8 @@ export default {
      *
      * @returns {Promise<Array<Category>>} Categories
      */
-    fetchCategories: async function () { // TODO: Put it more global
-        let res = await fetch(`${apiBaseUrl}/category/all`);
+    fetchCategories: async function () {
+        let res = await customFetch(`${apiBaseUrl}/category/all`);
         return res.json();
     },
     /**
@@ -15,12 +17,29 @@ export default {
      *
      * @returns {Promise<void>}
      */
-    login: async function () {
-        /**
-         * Login logic
-         * -> Logged in
-         */
-        await this.setCurrentUser(await this.fetchUser("ahmed_miri@gmx.net"));
+    login: async function (email, password) {
+
+        let token = btoa(`${email}:${password}`);
+        let res = await customFetch(`${apiBaseUrl}/user/${email}`, {
+            method: "GET",
+            headers: {
+                'Authorization': `Basic ${token}`,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        if (res.ok) {
+            await this.setCurrentUser(await res.json());
+            router.push("/");
+        } else {
+            throw Error(`Login failed`);
+        }
+
+        return;
+    },
+    handleUnauthorized: function () {
+        localStorage.removeItem("helpyUser");
+        router.push("/login");
     },
     /**
      * Register a new user in the api
@@ -29,7 +48,7 @@ export default {
      * @returns {Promise<void>}
      */
     register: async function (newUser) {
-        let res = await fetch(`${apiBaseUrl}/user/add`, {
+        let res = await customFetch(`${apiBaseUrl}/user/add`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -46,7 +65,7 @@ export default {
      * @returns {Promise<User>} User
      */
     fetchUser: async function (email) {
-        let res = await fetch(`${apiBaseUrl}/user/${email}`);
+        let res = await customFetch(`${apiBaseUrl}/user/${email}`);
         return res.json();
     },
     /**
@@ -65,7 +84,7 @@ export default {
     getCurrentUser: function () {
         let currentUser = JSON.parse(localStorage.getItem("helpyUser"));
         if(!currentUser) {
-            throw new Error("User not logged in");
+            this.handleUnauthorized();
         }
         return currentUser;
     },
@@ -77,7 +96,7 @@ export default {
      */
     updateCurrentUser: async function (updatedUser) {
         let currentUser = this.getCurrentUser();
-        let res = await fetch(`${apiBaseUrl}/user/update/${currentUser.email}`, {
+        let res = await customFetch(`${apiBaseUrl}/user/update/${currentUser.email}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -93,12 +112,12 @@ export default {
      */
     fetchCurrentUserJobs: async function () {
         let currentUser = this.getCurrentUser();
-        let res = await fetch(`${apiBaseUrl}/job/author/${currentUser.email}`);
+        let res = await customFetch(`${apiBaseUrl}/job/author/${currentUser.email}`);
         return res.json();
     },
     fetchCurrentHelperJobs: async function () {
         let currentUser = this.getCurrentUser();
-        let res = await fetch(`${apiBaseUrl}/job/helper/${currentUser.email}`);
+        let res = await customFetch(`${apiBaseUrl}/job/helper/${currentUser.email}`);
         return res.json();
     },
     /**
@@ -108,7 +127,7 @@ export default {
      * @returns {Promise<void>}
      */
     deleteJobById: async function (id) {
-        let res = await fetch(`${apiBaseUrl}/job/remove/${id}`, {
+        let res = await customFetch(`${apiBaseUrl}/job/remove/${id}`, {
             method: "DELETE"
         });
         if (!res.ok) throw new Error(`Unable to delete job ${id}`);
@@ -120,7 +139,7 @@ export default {
      * @returns {Promise<void>}
      */
     deleteUserByEmail: async function (email) {
-        let res = await fetch(`${apiBaseUrl}/user/remove/${email}`, {
+        let res = await customFetch(`${apiBaseUrl}/user/remove/${email}`, {
             method: "DELETE"
         });
         if (!res.ok) throw new Error(`Unable to delete user ${email}`);
@@ -132,7 +151,7 @@ export default {
      * @returns {Promise<Job>} Created job
      */
     addJob: async function (job) {
-        let res = await fetch(`${apiBaseUrl}/job/add`, {
+        let res = await customFetch(`${apiBaseUrl}/job/add`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -152,7 +171,7 @@ export default {
      * @returns {Promise<Array<Helper>>} List of helpers that match
      */
     findHelperForJobId: async function (id) {
-        let res = await fetch(`${apiBaseUrl}/job/id/${id}/find-helper`);
+        let res = await customFetch(`${apiBaseUrl}/job/id/${id}/find-helper`);
         if (res.ok) {
             return res.json();
         } else {
@@ -167,9 +186,43 @@ export default {
      * @returns {Promise<void>}
      */
     setHelperForJobId: async function (jobId, helperEmail) {
-        let res = await fetch(`${apiBaseUrl}/job/id/${jobId}/set-helper/${helperEmail}`, {
+        let res = await customFetch(`${apiBaseUrl}/job/id/${jobId}/set-helper/${helperEmail}`, {
             method: "PUT"
         });
         if (!res.ok) throw new Error(`Unable to set helper ${helperEmail} for job ${jobId}`);
     }
+}
+
+/**
+ * Wrapper around fetch to enforce settings for all requests.
+ *
+ * @param url
+ * @param options
+ * @returns {Promise<Response>}
+ */
+async function customFetch(url, options) {
+    if (options) {
+        options.credentials = 'include';
+        if (options.headers) {
+            options.headers["X-Requested-With"] = 'XMLHttpRequest';
+        } else {
+            options.headers = {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }
+    } else {
+        options = {
+            credentials: 'include',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }
+    }
+
+    let res = await fetch(url, options);
+
+    if (res.status === 401) {
+        this.handleUnauthorized();
+    }
+    return res;
 }

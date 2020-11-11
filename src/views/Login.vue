@@ -2,8 +2,8 @@
   <div id="login">
     <h1>Login</h1>
     <div class="login-form">
-      <input type="text" name="username" placeholder="Email" />
-      <input type="password" name="password" placeholder="Passwort" />
+      <input type="text" v-model="username" name="username" placeholder="Email" />
+      <input type="password" v-model="password" name="password" placeholder="Passwort" />
       <div class="buttons">
         <button type="button" v-on:click="login()">Login</button>
         <button type="button" v-on:click="cancel()">Abbrechen</button>
@@ -11,6 +11,37 @@
     </div>
   </div>
 </template>
+
+<script>
+import api from "@/api";
+
+export default {
+  name: "Login",
+  data: function () {
+    return {
+      username: "",
+      password: ""
+    }
+  },
+  methods: {
+    login: function () {
+      try {
+        api.login(this.username, this.password);
+        console.log("Logged in");
+        this.$router.push("/");
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    cancel: function () {
+      this.$router.push("/");
+    }
+  },
+  beforeMount: async function() {
+    //
+  }
+}
+</script>
 
 <style>
 #login {
