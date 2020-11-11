@@ -97,4 +97,14 @@ section.main-content {
 .navbar-start {
   font-size: 20px;
 }
+
+.buttons {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.buttons button {
+  margin: 3px 0px 3px 3px;
+
+}
 </style>
