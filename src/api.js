@@ -37,10 +37,6 @@ export default {
 
         return;
     },
-    handleUnauthorized: function () {
-        localStorage.removeItem("helpyUser");
-        router.push("/login");
-    },
     /**
      * Register a new user in the api
      *
@@ -84,7 +80,7 @@ export default {
     getCurrentUser: function () {
         let currentUser = JSON.parse(localStorage.getItem("helpyUser"));
         if(!currentUser) {
-            this.handleUnauthorized();
+            handleUnauthorized();
         }
         return currentUser;
     },
@@ -193,11 +189,15 @@ export default {
     }
 }
 
+
+function handleUnauthorized() {
+    localStorage.removeItem("helpyUser");
+    router.push("/login");
+}
+
 /**
  * Wrapper around fetch to enforce settings for all requests.
  *
- * @param url
- * @param options
  * @returns {Promise<Response>}
  */
 async function customFetch(url, options) {
@@ -222,7 +222,7 @@ async function customFetch(url, options) {
     let res = await fetch(url, options);
 
     if (res.status === 401) {
-        this.handleUnauthorized();
+        handleUnauthorized();
     }
     return res;
 }

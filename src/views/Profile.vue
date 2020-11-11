@@ -151,11 +151,7 @@ export default {
   },
   beforeMount: async function() {
     this.availableCategories = await api.fetchCategories();
-    try {
-      this.displayedProfile = await api.getCurrentUser();
-    } catch (e) {
-      await this.$router.push("/login");
-    }
+    this.displayedProfile = await api.getCurrentUser();
   }
 }
 </script>
