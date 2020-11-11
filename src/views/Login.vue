@@ -2,8 +2,8 @@
   <div id="login">
     <h1>Login</h1>
     <div class="login-form">
-      <input type="text" v-model="username" name="username" placeholder="Email" />
-      <input type="password" v-model="password" name="password" placeholder="Passwort" />
+      <input type="text" v-model="username" name="username" placeholder="Email" v-on:keyup.esc="cancel()" />
+      <input type="password" v-model="password" name="password" placeholder="Passwort" v-on:keyup.enter="login()" v-on:keyup.esc="cancel()" />
       <div class="buttons">
         <button type="button" v-on:click="login()">Login</button>
         <button type="button" v-on:click="cancel()">Abbrechen</button>
