@@ -95,6 +95,7 @@
 import api from "@/api";
 import Selectize from 'vue2-selectize'
 
+
 export default {
   name: "CreateRequest",
   components: {
@@ -132,13 +133,19 @@ export default {
           this.isModalOpen = true;
           this.helperFound = ((this.availableMatches.length >= 1))
         } catch (e) {
-          // TODO: Tell user that no match was found
-          console.error(e);
+          this.$swal(
+            'API-Fehler etwas ist schiefgelaufen.',
+            e.message,
+            'error'
+          )
         }
 
       } catch (e) {
-        // TODO: Tell user that job failed to add
-        console.error(e);
+        this.$swal(
+          'Job konnte nicht erstellt werden.',
+          e.message,
+          'error'
+        )
       }
     },
     selectHelper: async function (helper) {
@@ -148,8 +155,11 @@ export default {
 
         await this.$router.push("/requests");
       } catch (e) {
-        // TODO: Inform user about failure
-        console.error(e);
+        this.$swal(
+          'Helper konnte nicht dem Antrag zugeteilt werden.',
+          e.message,
+          'error'
+        )
       } finally {
         this.isModalOpen = false;
       }

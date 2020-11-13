@@ -165,7 +165,7 @@ export default {
         if (res.ok) {
             return res.json();
         } else {
-            throw new Error(`Failed to add job:\n${JSON.stringify(job)}`);
+            throw new Error(parseError(await res.json()));
         }
     },
     /**
@@ -179,7 +179,7 @@ export default {
         if (res.ok) {
             return res.json();
         } else {
-            throw new Error(`No helpers found for job:\n${id}`);
+            throw new Error(`Leider konnte kein Helper für deinen Antrag gefunden werden.`);
         }
     },
     /**
@@ -193,7 +193,7 @@ export default {
         let res = await customFetch(`${apiBaseUrl}/job/id/${jobId}/set-helper/${helperEmail}`, {
             method: "PUT"
         });
-        if (!res.ok) throw new Error(`Unable to set helper ${helperEmail} for job ${jobId}`);
+        if (!res.ok) throw new Error(parseError(await res.json));
     }
 }
 
@@ -233,4 +233,12 @@ async function customFetch(url, options) {
         handleUnauthorized();
     }
     return res;
+}
+
+function parseError(data) {
+    let message = ""
+    for (let m of data.details) {
+        message += m + "<br/>"
+    }
+    return message
 }
