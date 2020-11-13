@@ -8,7 +8,11 @@
 <script>
 export default {
   name: "SwitchCheckbox",
-  props: ["value"]
+  data: function() {
+  return {
+      value: false
+    };
+  }
 }
 </script>
 

@@ -185,8 +185,6 @@ export default {
             console.error("Job without status was received: ", jobs[i])
         }
       }
-
-      console.log(jobs);
     },
     findMatch: async function(openJobs, i) {
       try {

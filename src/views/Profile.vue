@@ -152,6 +152,8 @@ export default {
   beforeMount: async function() {
     this.availableCategories = await api.fetchCategories();
     this.displayedProfile = await api.getCurrentUser();
+
+    this.displayedProfile.categories = this.displayedProfile.categories || []
   }
 }
 </script>

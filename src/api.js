@@ -34,8 +34,6 @@ export default {
         } else {
             throw Error(`Login failed`);
         }
-
-        return;
     },
     /**
      * Register a new user in the api
@@ -157,7 +155,7 @@ export default {
         if (res.ok) {
             return res.json();
         } else {
-            throw new Error(`Failed to add job:\n${job}`);
+            throw new Error(`Failed to add job:\n${JSON.stringify(job)}`);
         }
     },
     /**
