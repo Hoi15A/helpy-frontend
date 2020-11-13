@@ -136,16 +136,43 @@ export default {
       try {
         await api.updateCurrentUser(this.displayedProfile)
       } catch (e) {
-        console.error(e);
+        this.$swal(
+          'Aktualisierung fehlgeschlagen.',
+          e.message,
+          'error'
+        )
       }
     },
     deleteUser: async function() {
       try {
-        await api.deleteUserByEmail(this.displayedProfile.email);
-        console.log("User deleted")
-        await this.$router.push("/register");
+        let result = await this.$swal(
+          {
+            title: 'Konto löschen?',
+            html: 'Willst du uns wirklich verlassen?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Löschen`,
+            cancelButtonText: `Abbrechen`
+          }
+        )
+        if (result.isConfirmed) {
+          await api.deleteUserByEmail(this.displayedProfile.email);
+          this.$swal(
+            {
+              title: 'Konto erfolgreich gelöscht.',
+              html: 'Schade, dass du uns verlässt :(',
+              icon: 'success',
+              confirmButtonText: `Okay`,
+            }
+          )
+          this.$router.push("/")
+        }
       } catch (e) {
-        console.error(e);
+        this.$swal(
+          'Fehler beim Löschen.',
+          'Konto konnte nicht gelöscht werden.',
+          'error'
+        )
       }
     }
   },

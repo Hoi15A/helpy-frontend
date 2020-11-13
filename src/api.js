@@ -145,6 +145,7 @@ export default {
         let res = await customFetch(`${apiBaseUrl}/user/remove/${email}`, {
             method: "DELETE"
         });
+        localStorage.removeItem("helpyUser")
         if (!res.ok) throw new Error(`Unable to delete user ${email}`);
     },
     /**
