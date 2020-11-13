@@ -57,6 +57,7 @@
 @import url("../node_modules/normalize.css/normalize.css");
 @import url("../node_modules/bulma/css/bulma.min.css");
 @import "~selectize/dist/css/selectize.bootstrap3.css";
+@import '~sweetalert2/dist/sweetalert2.min.css';
 
 #app {
 
