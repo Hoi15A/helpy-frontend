@@ -19,7 +19,7 @@
           <div class="navbar-end">
             <div class="navbar-item" v-if="this.$route.path !== '/requests/create'">
               <router-link to="/requests/create">
-                <button class="button is-outlined is-rounded">Antrag erstellen</button>
+                <button class="button is-outlined is-rounded is-success">Antrag erstellen</button>
               </router-link>
             </div>
 
