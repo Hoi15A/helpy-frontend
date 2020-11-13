@@ -7,8 +7,8 @@
 
         <div class="tabs is-medium">
           <ul>
-            <li><a href="#" @click.prevent="selectedRole = 'HelpSeeker'">Ich suche Hilfe</a></li>
-            <li><a href="#" @click.prevent="selectedRole = 'Helper'">Ich leiste Hilfe</a></li>
+            <li :class="{ 'is-active': selectedRole == 'HelpSeeker' }"><a href="#" @click.prevent="selectedRole = 'HelpSeeker'">Ich suche Hilfe</a></li>
+            <li :class="{ 'is-active': selectedRole == 'Helper' }"><a href="#" @click.prevent="selectedRole = 'Helper'">Ich leiste Hilfe</a></li>
           </ul>
         </div>
 
@@ -157,7 +157,7 @@ export default {
       currentHelperJobs: [],
       isModalOpen: false,
       helperFound: false,
-      selectedRole: 'Helper'
+      selectedRole: 'HelpSeeker'
     };
   },
   methods: {

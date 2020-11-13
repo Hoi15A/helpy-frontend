@@ -5,8 +5,8 @@
 
         <div class="tabs is-medium">
           <ul>
-            <li><a href="#" @click.prevent="selectedRole = 'HelpSeeker'">Ich suche Hilfe</a></li>
-            <li><a href="#" @click.prevent="selectedRole = 'Helper'">Ich leiste Hilfe</a></li>
+            <li :class="{ 'is-active': selectedRole == 'HelpSeeker' }"><a href="#" @click.prevent="selectedRole = 'HelpSeeker'">Ich suche Hilfe</a></li>
+            <li :class="{ 'is-active': selectedRole == 'Helper' }"><a href="#" @click.prevent="selectedRole = 'Helper'">Ich leiste Hilfe</a></li>
           </ul>
         </div>
         <div v-if="this.selectedRole === 'HelpSeeker'">
@@ -70,7 +70,7 @@ export default {
       closedJobs: [],
       closedJobsAsHelper: [],
       jobsCollector: [],
-      selectedRole: true
+      selectedRole: "HelpSeeker"
     }
   },
   methods: {
