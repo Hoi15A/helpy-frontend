@@ -40,9 +40,8 @@ export default {
 
         if (res.ok) {
             await this.setCurrentUser(await res.json());
-            router.push("/");
         } else {
-            throw Error(`Login failed`);
+            throw Error(`Benutzername oder Passwort ist falsch.`);
         }
     },
     /**

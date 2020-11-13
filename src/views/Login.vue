@@ -26,13 +26,17 @@ export default {
     }
   },
   methods: {
-    login: function () {
+    login: async function () {
       try {
-        api.login(this.username, this.password);
+        await api.login(this.username, this.password);
         console.log("Logged in");
         this.$router.push("/");
       } catch (e) {
-        console.error(e);
+        this.$swal(
+          'Login fehlgeschlagen',
+          e.message,
+          'error'
+        )
       }
     },
     cancel: function () {
