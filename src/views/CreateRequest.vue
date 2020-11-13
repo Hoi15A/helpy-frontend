@@ -14,18 +14,19 @@
           <label class="label">Kategorien</label>
           <div class="control">
             <div class="select is-multiple is-fullwidth">
-              <select multiple size="5" v-model="request.categories">
-                <option v-for="cat in availableCategories" :key="cat.name" :value="cat">{{cat.name}}</option>
-              </select>
+              <selectize persist v-model="request.categories" :settings="request.categorySettings">
+                <option v-for="cat in availableCategories" :key="cat.name" :value="cat.name">{{cat.name}}</option>
+              </selectize>
             </div>
           </div>
-          <p class="help">Mehrere mit CTRL+Click auswählen</p>
         </div>
 
         <div class="field">
           <label class="label">Tags</label>
           <div class="control">
-            <input disabled class="input" type="text" placeholder="z.B. sbb, billet, zvv">
+           <selectize v-model="request.tags" :settings="request.tagSettings">
+              <option v-for="tag in availableTags" :key="tag.name" :value="tag.name">{{tag.name}}</option>
+            </selectize>
           </div>
         </div>
 
@@ -45,7 +46,7 @@
 
         <div class="buttons">
           <button class="button is-info" @click="saveRequest()">Antrag Erstellen</button>
-          <button class="button">Abbrechen</button>
+          <button class="button" @click="$router.push('/')">Abbrechen</button>
         </div>
 
         <div class="modal" v-bind:class="{ 'is-active': isModalOpen }">
@@ -92,9 +93,13 @@
 
 <script>
 import api from "@/api";
+import Selectize from 'vue2-selectize'
 
 export default {
   name: "CreateRequest",
+  components: {
+    Selectize
+  },
   data: function() {
     return {
       request: {
@@ -103,9 +108,12 @@ export default {
         categories: [],
         tags: [],
         dueDate: "",
-        description: ""
+        description: "",
+        categorySettings: {selectOnTab: true, maxItems: 5, highlight: true},
+        tagSettings: {selectOnTab: true, maxItems: 5, highlight: true},
       },
       availableCategories: [],
+      availableTags: [],
       availableMatches: [],
       currentJob: {},
       isModalOpen: false,
@@ -150,6 +158,7 @@ export default {
   },
   beforeMount: async function() {
     this.availableCategories = await api.fetchCategories();
+    this.availableTags = await api.fetchTags();
   }
 };
 </script>

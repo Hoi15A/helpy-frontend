@@ -12,6 +12,16 @@ export default {
         let res = await customFetch(`${apiBaseUrl}/category/all`);
         return res.json();
     },
+
+    /**
+     * Fetch all available tags from the api
+     *
+     * @returns {Promise<Array<Tag>>} Tags
+     */
+    fetchTags: async function () {
+        let res = await customFetch(`${apiBaseUrl}/tag/all`);
+        return res.json();
+    },
     /**
      * Log in user
      *
