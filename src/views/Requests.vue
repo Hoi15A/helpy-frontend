@@ -7,8 +7,8 @@
 
         <div class="tabs is-medium">
           <ul>
-            <li :class="{ 'is-active': selectedRole == 'HelpSeeker' }"><a href="#" @click.prevent="selectedRole = 'HelpSeeker'">Ich suche Hilfe</a></li>
-            <li :class="{ 'is-active': selectedRole == 'Helper' }"><a href="#" @click.prevent="selectedRole = 'Helper'">Ich leiste Hilfe</a></li>
+            <li :class="{ 'is-active': selectedRole === 'HelpSeeker' }"><a href="#" @click.prevent="selectedRole = 'HelpSeeker'">Ich suche Hilfe</a></li>
+            <li :class="{ 'is-active': selectedRole === 'Helper' }"><a href="#" @click.prevent="selectedRole = 'Helper'">Ich leiste Hilfe</a></li>
           </ul>
         </div>
 
@@ -53,19 +53,17 @@
             </tr>
             </thead>
             <tbody class="has-text-left">
-            <tr v-for="(inProgressJob, index) in inProgressJobs" v-bind:key="inProgressJob.index">
+            <tr v-for="(inProgressJob, index) in inProgressJobs" v-bind:key="inProgressJob.id">
               <td>{{ inProgressJob.title }}</td>
               <td>{{ inProgressJob.matchedHelper.firstname }}</td>
               <td>{{ inProgressJob.created }}</td>
 
               <td>
                 <div class="buttons">
-                  <button class="button" @click="deleteJob(inProgressJobs, index)">
+                  <button class="button is-danger" @click="deleteJob(inProgressJobs, index)">
                     Löschen
                   </button>
-                  <button disabled class="button">
-                    Bearbeiten (WIP)
-                  </button>
+                  <button class="button is-info" @click="jobClosedBySeeker = true; tempJob = inProgressJobs[index]">Job Abschliessen</button>
                 </div>
               </td>
             </tr>
@@ -92,7 +90,7 @@
             <td>
               <div class="buttons">
                 <button class="button" @click="deleteJob(openJobs, index)">Löschen</button>
-                <button class="button" @click="findMatch(openJobs, index)">Match</button>
+                <button class="button" @click="findMatch(openJob.id)">Match</button>
                 <button disabled class="button">Bearbeiten (WIP)</button>
               </div>
             </td>
@@ -103,7 +101,7 @@
       </div>
     </div>
 
-    <div class="modal" v-bind:class="{ 'is-active': isModalOpen }">
+    <div class="modal" v-bind:class="{ 'is-active': isMatchingModalOpen }">
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
@@ -121,12 +119,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in availableMatches" v-bind:key="item">
-              <td>{{ item.firstname + " " + item.lastname }}</td>
-              <td>{{ item.biographie }}</td>
-              <td>{{ item.plz }}</td>
+            <tr v-for="helper in availableMatches" v-bind:key="helper">
+              <td>{{ helper.firstname + " " + helper.lastname }}</td>
+              <td>{{ helper.biographie }}</td>
+              <td>{{ helper.plz }}</td>
               <td>
-                <button class="button" @click="selectHelper(openJobs, index, item)">Auswählen</button>
+                <button class="button" @click="selectHelper(helper)">Auswählen</button> <!-- index needs to be from jobs not helper(helper)
+                rename helper to user. -->
               </td>
             </tr>
             </tbody>
@@ -134,7 +133,33 @@
           <p class="modal-card-body" v-else>Sie können ihren Antrag unter Anträge nochmals matchen</p>
         </section>
         <footer class="modal-card-foot">
-          <button class="button" @click="isModalOpen=false">Schliessen</button>
+          <button class="button" @click="isMatchingModalOpen=false">Schliessen</button>
+        </footer>
+      </div>
+    </div>
+
+
+    <div class="modal" v-bind:class="{ 'is-active': jobClosedBySeeker }">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Bewerten Sie Ihren Helper</p>
+        </header>
+        <section class="modal-card-body">
+          <div class="test">
+            <vue-star-rating v-bind:increment="1"
+                             v-bind:max-rating="5"
+                             :show-rating="false"
+                             inactive-color="#858585"
+                             active-color="#e9c46a"
+                             v-bind:star-size="45"
+                             @rating-selected ="setRating">
+            </vue-star-rating>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button" @click="jobClosedBySeeker=false">Abbrechen</button>
+          <button class="button" @click="closeJob()">Rating bestätigen</button>
         </footer>
       </div>
     </div>
@@ -159,12 +184,19 @@ export default {
       availableMatches: [],
       closedJobs: [],
       currentHelperJobs: [],
-      isModalOpen: false,
+      isMatchingModalOpen: false,
       helperFound: false,
-      selectedRole: 'HelpSeeker'
+      jobClosedBySeeker: false,
+      selectedRole: 'HelpSeeker',
+      tempRating: null,
+      tempJob: {},
+      tempOpenMatcherJob: {},
     };
   },
   methods: {
+    setRating: function(rating){
+      this.tempRating = rating;
+    },
     loadUserJobs: async function () {
 
       let jobs = await api.fetchCurrentUserJobs();
@@ -190,25 +222,33 @@ export default {
         }
       }
     },
-    findMatch: async function(openJobs, i) {
+    findMatch: async function(jobId) {
       try {
-          this.availableMatches = await api.findHelperForJobId(this.openJobs[i].id);
-          this.isModalOpen = true;
+          this.tempOpenMatcherJob = await api.getJobById(jobId);
+          this.availableMatches = await api.findHelperForJobId(jobId);
+          this.isMatchingModalOpen = true;
           this.helperFound = ((this.availableMatches.length >= 1))
         } catch (e) {
           // TODO: Tell user that no match was found
           console.error(e);
         }
     },
-    selectHelper: async function (openJobs, i, item) {
+    closeJob: async function () {
+      let tempJob = this.tempJob
+      await api.addRating(this.tempRating, tempJob.matchedHelper.email)
+      await api.closeJobById(tempJob.id)
+      await this.$router.go()
+    },
+    selectHelper: async function (helper) {
       try {
-        await api.setHelperForJobId(this.openJobs[i].id, item.email);
+        await api.setHelperForJobId(this.tempOpenMatcherJob.id, helper.email);
         await this.$router.go()
 
       } catch (e) {
         console.error(e);
       } finally {
-        this.isModalOpen = false;
+        this.isMatchingModalOpen = false;
+        this.helperFound = false;
       }
 
     },
