@@ -5,8 +5,11 @@
       <div class="column is-half is-offset-one-quarter has-text-left">
         <div class="field">
           <label class="label">Titel</label>
-          <div class="control">
+          <div class="control has-icons-left">
             <input class="input" v-model="request.title" type="text" placeholder="Titel">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="heading" />
+            </span>
           </div>
         </div>
 
@@ -32,8 +35,11 @@
 
         <div class="field">
           <label class="label">Ablaufdatum</label>
-          <div class="control">
+          <div class="control has-icons-left">
             <input class="input" v-model="request.dueDate" type="date" placeholder="Verfügbarkeit">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="calendar" />
+            </span>
           </div>
         </div>
 
@@ -44,9 +50,15 @@
           </div>
         </div>
 
-        <div class="buttons">
-          <button class="button is-info" @click="saveRequest()">Antrag Erstellen</button>
-          <button class="button" @click="$router.push('/')">Abbrechen</button>
+        <div class="field">
+          <div class="buttons">
+            <div class="control">
+              <button class="button is-info" @click="saveRequest()">Antrag Erstellen</button>
+            </div>
+            <div class="control">
+              <button class="button" @click="$router.push('/')">Abbrechen</button>
+            </div>
+          </div>
         </div>
 
         <div class="modal" v-bind:class="{ 'is-active': isModalOpen }">
@@ -94,7 +106,10 @@
 <script>
 import api from "@/api";
 import Selectize from 'vue2-selectize'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHeading, faCalendar } from '@fortawesome/free-solid-svg-icons'
 
+library.add(faHeading, faCalendar);
 
 export default {
   name: "CreateRequest",
