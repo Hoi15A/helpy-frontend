@@ -24,7 +24,7 @@
 
         <div class="field">
           <div class="control has-icons-left">
-            <input type="password" class="input" name="password-repeat"  placeholder="Passwort wiederholen" />
+            <input type="password" class="input" v-model="user.repeatPass" name="password-repeat"  placeholder="Passwort wiederholen" />
             <span class="icon is-small is-left">
               <font-awesome-icon icon="key" />
             </span>
@@ -67,11 +67,17 @@
           </div>
         </div>
 
-        <div class="buttons">
-          <button class="button is-info" v-on:click="registerUser()">Registrieren</button>
-          <router-link to="/">
-            <button class="button">Abbrechen</button>
-          </router-link>
+        <div class="field">
+          <div class="buttons">
+            <div class="control">
+              <button class="button is-info" v-on:click="registerUser()">Registrieren</button>
+            </div>
+            <div class="control">
+              <router-link to="/">
+                <button class="button">Abbrechen</button>
+              </router-link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -93,6 +99,7 @@ export default {
         type: "Helpseeker",
         email: "",
         password: "",
+        repeatPass: "",
         firstname: "",
         lastname: "",
         sex: "M",
@@ -106,7 +113,22 @@ export default {
   },
   methods: {
     registerUser: async function() {
-      await api.register(this.user);
+      if (this.validateUser(this.user)) {
+        delete this.user.repeatPass;
+        await api.register(this.user);
+      }
+    },
+    validateUser: function(user) {
+      if (user.password !== user.repeatPass) {
+        this.$swal(
+            {
+              title: 'Passwörter sind nicht gleich',
+              icon: 'error'
+            }
+        )
+        return true;
+      }
+      return false;
     }
   }
 };
