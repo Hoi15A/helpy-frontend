@@ -145,9 +145,13 @@
 <script>
 
 import api from "@/api";
+import VueStarRating from "vue-star-rating/src/star-rating";
 
 export default {
   name: "Requests",
+  components: {
+    VueStarRating
+  },
   data: function() {
     return {
       openJobs: [],
