@@ -3,17 +3,75 @@
     <h1>Register</h1>
     <div class="columns">
       <div class="column is-one-third is-offset-one-third has-text-left">
-        <input type="text" class="input" v-model="user.firstname" name="firstname"  placeholder="Vorname" />
-        <input type="text" class="input" v-model="user.lastname" name="lastname"  placeholder="Nachname" />
-        <input type="email" class="input" v-model="user.email" name="email"  placeholder="Email" />
-        <input type="password" class="input" v-model="user.password" name="password"  placeholder="Passwort" />
-        <input type="password" class="input" name="password-repeat"  placeholder="Passwort wiederholen" />
-        <input type="date" class="input" v-model="user.birthdate" id="date of birth" name="date-of-birth"  placeholder="Geburtsdatum" />
+
+        <div class="field">
+          <div class="control has-icons-left">
+            <input type="email" class="input" v-model="user.email" name="email"  placeholder="Email" />
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="envelope" />
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control has-icons-left">
+            <input type="password" class="input" v-model="user.password" name="password"  placeholder="Passwort" />
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="key" />
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control has-icons-left">
+            <input type="password" class="input" name="password-repeat"  placeholder="Passwort wiederholen" />
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="key" />
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control has-icons-left">
+            <input type="text" class="input" v-model="user.firstname" name="firstname"  placeholder="Vorname" />
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="id-card" />
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control has-icons-left">
+            <input type="text" class="input" v-model="user.lastname" name="lastname"  placeholder="Nachname" />
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="id-card" />
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control has-icons-left">
+            <input type="date" class="input" v-model="user.birthdate" id="date of birth" name="date-of-birth"  placeholder="Geburtsdatum" />
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="calendar" />
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control has-icons-left">
+            <input type="text" class="input" v-model="user.plz" name="plz" placeholder="PLZ">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="map-marker-alt" />
+            </span>
+          </div>
+        </div>
+
         <div class="buttons">
+          <button class="button is-info" v-on:click="registerUser()">Registrieren</button>
           <router-link to="/">
             <button class="button">Abbrechen</button>
           </router-link>
-          <button class="button" v-on:click="registerUser()">Registrieren</button>
         </div>
       </div>
     </div>
@@ -22,6 +80,10 @@
 
 <script>
 import api from "@/api";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEnvelope, faKey, faIdCard, faCalendar, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faEnvelope, faKey, faIdCard, faCalendar, faMapMarkerAlt);
 
 export default {
   name: "Home",
@@ -29,12 +91,13 @@ export default {
     return {
       user: { // TODO: This is just copy pasted stuff from the db directly, map to actual input
         type: "Helpseeker",
-        email: "ahmed_miri@gmx.net",
-        firstname: "Ahmed",
-        lastname: "Miri",
+        email: "",
+        password: "",
+        firstname: "",
+        lastname: "",
         sex: "M",
-        plz: 8400,
-        birthdate: "2003-01-05",
+        plz: "",
+        birthdate: "",
         biographie: "Ich heisse Ahmed und bin 17 Jahre alt und bin seit 2015 in der Schweiz und komme aus Afghanistan. Ich wohne in Winterthur und gehe im Moment in die 10. Klasse. Ich schaue gerne Fussball und spiele beim SC Veltheim in der U19 2. Mannschaft. Ich habe Probleme mit Schreiben und Lesen von wichtigen Papieren in der Schweiz und verstehe sie nicht alle.",
         status: "INACTIVE",
         permission: "USER"
