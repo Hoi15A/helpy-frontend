@@ -93,13 +93,68 @@
               <div class="buttons">
                 <button class="button" @click="deleteJob(openJobs, index)">Löschen</button>
                 <button class="button" @click="findMatch(openJobs, index)">Match</button>
-                <button disabled class="button">Bearbeiten (WIP)</button>
+                <button class="button" @click="editJob(openJob.id)">Bearbeiten</button>
               </div>
             </td>
           </tr>
           </tbody>
         </table>
         </div>
+      </div>
+    </div>
+
+    <div class="modal" v-bind:class="{ 'is-active': isEditingJob }" v-if="this.currentJob !== null">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Antrag editieren</p>
+        </header>
+        <section class="modal-card-body">
+          <div class="field">
+            <label class="label">Titel</label>
+            <div class="control">
+              <input class="input" v-model="currentJob.title" type="text" placeholder="Titel">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Kategorien</label>
+            <div class="control">
+              <div class="select is-multiple is-fullwidth">
+                <selectize persist v-model="currentJob.categories" :settings="this.categorySettings">
+                  <option v-for="cat in availableCategories" :key="cat.name" :value="cat.name">{{cat.name}}</option>
+                </selectize>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Tags</label>
+            <div class="control">
+            <selectize v-model="currentJob.tags" :settings="this.tagSettings">
+                <option v-for="tag in availableTags" :key="tag.name" :value="tag.name">{{tag.name}}</option>
+              </selectize>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Ablaufdatum</label>
+            <div class="control">
+              <input class="input" v-model="currentJob.dueDate" type="date" placeholder="Verfügbarkeit">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Beschreibung</label>
+            <div class="control">
+              <textarea class="textarea" v-model="currentJob.description" placeholder="Ich brauche hilfe mit ..."></textarea>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-success" @click="updateJob()">Aktualisieren</button>
+          <button class="button" @click="isEditingJob=false">Schliessen</button>
+        </footer>
       </div>
     </div>
 
@@ -145,9 +200,13 @@
 <script>
 
 import api from "@/api";
+import Selectize from 'vue2-selectize'
 
 export default {
   name: "Requests",
+  components: {
+    Selectize
+  },
   data: function() {
     return {
       openJobs: [],
@@ -155,9 +214,15 @@ export default {
       availableMatches: [],
       closedJobs: [],
       currentHelperJobs: [],
+      availableCategories: [],
+      availableTags: [],
       isModalOpen: false,
+      isEditingJob: false,
       helperFound: false,
-      selectedRole: 'HelpSeeker'
+      selectedRole: 'HelpSeeker',
+      currentJob: null,
+      categorySettings: {selectOnTab: true, maxItems: 5, highlight: true},
+      tagSettings: {selectOnTab: true, maxItems: 5, highlight: true}
     };
   },
   methods: {
@@ -208,6 +273,26 @@ export default {
       }
 
     },
+    editJob: async function(jobId) {
+      try {
+        let tempCurrJob = await api.getJobById(jobId);
+        tempCurrJob.categories = tempCurrJob.categories.map(en => en.name);
+        tempCurrJob.tags = tempCurrJob.tags.map(en => en.name);
+        this.currentJob = tempCurrJob;
+        this.isEditingJob = true
+      } catch(e) {
+        console.error(e);
+      }
+    },
+    updateJob: async function() {
+      try {
+        //DTO Bug mit Status
+        await api.updateJob(this.currentJob)
+        this.isEditingJob = false
+      } catch (e) {
+        console.error(e);
+      }
+    },
     deleteJob: async function(jobList, i) {
       try {
         let result = await this.$swal(
@@ -243,8 +328,10 @@ export default {
       }
     }
   },
-  beforeMount: function() {
+  beforeMount: async function() {
     this.loadUserJobs();
+    this.availableCategories = await api.fetchCategories();
+    this.availableTags = await api.fetchTags();
   }
 };
 </script>
