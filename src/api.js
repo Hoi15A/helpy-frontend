@@ -151,6 +151,19 @@ export default {
         if (!res.ok) throw new Error(`Unable to delete job ${id}`);
     },
     /**
+     * Close a job using its id
+     *
+     * @param id
+     * @returns {Promise<void>}
+     */
+    closeJobById: async function(id) {
+        let res = await customFetch(`${apiBaseUrl}/job/close/${id}`, {
+            method: "PUT"
+        });
+        console.log(res)
+        if (!res.ok) throw new Error(`Unable to close job ${id}`);
+    },
+    /**
      * Deletes a user using its email
      *
      * @param email
