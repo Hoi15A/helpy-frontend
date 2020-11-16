@@ -3,11 +3,33 @@
     <h1>Login</h1>
     <div class="columns">
       <div class="column is-one-third is-offset-one-third has-text-left">
-        <input class="input" type="text" v-model="username" name="username" placeholder="Email" v-on:keyup.esc="cancel()" />
-        <input class="input" type="password" v-model="password" name="password" placeholder="Passwort" v-on:keyup.enter="login()" v-on:keyup.esc="cancel()" />
-        <div class="buttons">
-          <button class="button" v-on:click="login()">Login</button>
-          <button class="button" v-on:click="cancel()">Abbrechen</button>
+        <div class="field">
+          <div class="control has-icons-left">
+            <input class="input" type="text" v-model="username" name="username" placeholder="Email" v-on:keyup.esc="cancel()" />
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="envelope" />
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control has-icons-left">
+            <input class="input" type="password" v-model="password" name="password" placeholder="Passwort" v-on:keyup.enter="login()" v-on:keyup.esc="cancel()" />
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="key" />
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="buttons">
+            <div class="control">
+              <button class="button is-info" v-on:click="login()">Login</button>
+            </div>
+            <div class="control">
+              <button class="button" v-on:click="cancel()">Abbrechen</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -16,6 +38,10 @@
 
 <script>
 import api from "@/api";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEnvelope, faKey } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faEnvelope, faKey);
 
 export default {
   name: "Login",
@@ -30,7 +56,7 @@ export default {
       try {
         await api.login(this.username, this.password);
         console.log("Logged in");
-        this.$router.push("/");
+        await this.$router.push("/");
       } catch (e) {
         this.$swal(
           'Login fehlgeschlagen',
