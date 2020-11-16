@@ -210,10 +210,36 @@ export default {
     },
     deleteJob: async function(jobList, i) {
       try {
-        await api.deleteJobById(jobList[i].id);
-        jobList.splice(i, 1);
+        let result = await this.$swal(
+          {
+            title: 'Antrag löschen?',
+            html: 'Willst du deinen Antrag wirklich löschen?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Löschen`,
+            cancelButtonText: `Abbrechen`
+          }
+        )
+        if (result.isConfirmed) {
+          await api.deleteJobById(jobList[i].id);
+          jobList.splice(i, 1);
+          this.$swal(
+            {
+              title: 'Antrag gelöscht.',
+              html: 'Dein Antrag wurde erfolgreich gelöscht.',
+              icon: 'success',
+              confirmButtonText: `OK`,
+            }
+          )
+        }
       } catch (e) {
-        console.error(e);
+         this.$swal(
+            {
+              title: 'Fehler beim Löschen',
+              html: 'Dein Antrag konnte nicht gelöscht werden.',
+              icon: 'error'
+            }
+          )
       }
     }
   },
