@@ -90,7 +90,7 @@
             <td>
               <div class="buttons">
                 <button class="button" @click="deleteJob(openJobs, index)">Löschen</button>
-                <button class="button" @click="findMatch(openJobs, index)">Match</button>
+                <button class="button" @click="findMatch(openJob.id)">Match</button>
                 <button class="button" @click="editJob(openJob.id)">Bearbeiten</button>
               </div>
             </td>
