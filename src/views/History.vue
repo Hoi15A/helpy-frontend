@@ -23,7 +23,7 @@
             <tbody class="has-text-left">
             <tr v-for="closedJob in closedJobs" v-bind:key="closedJob.value">
               <td>{{ closedJob.title }}</td>
-              <td>{{ closedJob.matchedHelper ? closedJob.firstname : "Kein Helfer" }}</td>
+              <td>{{ closedJob.matchedHelper ? closedJob.matchedHelper.firstname : "Kein Helfer" }}</td>
               <td>{{ closedJob.created }}</td>
               <td>0</td>
             </tr>

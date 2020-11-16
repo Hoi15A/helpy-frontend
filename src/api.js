@@ -61,6 +61,21 @@ export default {
         let createdUser = await res.json();
         this.setCurrentUser(createdUser);
     },
+
+    addRating: async function (rating, email) {
+        let res = await customFetch(`${apiBaseUrl}/user/addRating/${email}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(rating)
+        });
+        if (res.ok) {
+            return res.json();
+        } else {
+            throw new Error(`Failed to add rating:\n${JSON.stringify(rating)}`);
+        }
+    },
     /**
      * Fetch a user from the api
      *
@@ -134,6 +149,19 @@ export default {
             method: "DELETE"
         });
         if (!res.ok) throw new Error(`Unable to delete job ${id}`);
+    },
+    /**
+     * Close a job using its id
+     *
+     * @param id
+     * @returns {Promise<void>}
+     */
+    closeJobById: async function(id) {
+        let res = await customFetch(`${apiBaseUrl}/job/close/${id}`, {
+            method: "PUT"
+        });
+        console.log(res)
+        if (!res.ok) throw new Error(`Unable to close job ${id}`);
     },
     /**
      * Deletes a user using its email
