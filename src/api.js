@@ -61,6 +61,21 @@ export default {
         let createdUser = await res.json();
         this.setCurrentUser(createdUser);
     },
+
+    addRating: async function (rating, email) {
+        let res = await customFetch(`${apiBaseUrl}/user/addRating/${email}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(rating)
+        });
+        if (res.ok) {
+            return res.json();
+        } else {
+            throw new Error(`Failed to add rating:\n${JSON.stringify(rating)}`);
+        }
+    },
     /**
      * Fetch a user from the api
      *
