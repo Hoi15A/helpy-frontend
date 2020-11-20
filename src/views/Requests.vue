@@ -224,7 +224,6 @@
 
 <script>
 
-//import api from "@/api1";
 import JobApi from "@/jobApi";
 import UserApi from "@/userApi";
 import CategoryApi from "@/categoryApi";

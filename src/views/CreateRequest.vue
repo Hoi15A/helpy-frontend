@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import Api from "@/api1";
+import Api from "@/api";
 import JobApi from "@/jobApi";
 import CategoryApi from "@/categoryApi";
 import TagApi from "@/tagApi";

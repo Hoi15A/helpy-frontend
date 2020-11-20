@@ -95,7 +95,7 @@
 import SwitchCheckbox from "@/components/SwitchCheckbox";
 import UserApi from "@/userApi";
 import CategoryApi from "@/categoryApi";
-import Api from "@/api1";
+import Api from "@/api";
 
 const userApi = new UserApi();
 const categoryApi = new CategoryApi();
