@@ -9,6 +9,7 @@
         </div>
 
         <button disabled class="button">Avatar hochladen</button>
+        <button class="button" @click="logout()">Logout</button>
 
         <div class="field has-text-left">
           <label class="label">Email</label>
@@ -180,6 +181,10 @@ export default {
           'error'
         )
       }
+    },
+    logout: function () {
+      userApi.logout();
+      this.$router.push("/")
     }
   },
   beforeMount: async function() {

@@ -30,6 +30,14 @@ export default class UserApi extends Api {
     }
 
     /**
+     * Log the user out
+     */
+    async logout () {
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/logout`);
+        if (!res.ok) throw Error(`Logout failed`);
+    }
+
+    /**
      * Register a new user in the api
      *
      * @param newUser User object to register
