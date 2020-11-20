@@ -93,7 +93,13 @@
 
 <script>
 import SwitchCheckbox from "@/components/SwitchCheckbox";
-import api from "@/api";
+import UserApi from "@/api/userApi";
+import CategoryApi from "@/api/categoryApi";
+import Api from "@/api/api";
+
+const userApi = new UserApi();
+const categoryApi = new CategoryApi();
+const api = new Api();
 
 export default {
   name: "Profile",
@@ -134,7 +140,7 @@ export default {
       }
 
       try {
-        await api.updateCurrentUser(this.displayedProfile)
+        await userApi.updateCurrentUser(this.displayedProfile)
       } catch (e) {
         this.$swal(
           'Aktualisierung fehlgeschlagen.',
@@ -156,7 +162,7 @@ export default {
           }
         )
         if (result.isConfirmed) {
-          await api.deleteUserByEmail(this.displayedProfile.email);
+          await userApi.deleteUserByEmail(this.displayedProfile.email);
           this.$swal(
             {
               title: 'Konto erfolgreich gelöscht.',
@@ -177,7 +183,7 @@ export default {
     }
   },
   beforeMount: async function() {
-    this.availableCategories = await api.fetchCategories();
+    this.availableCategories = await categoryApi.fetchCategories();
     this.displayedProfile = await api.getCurrentUser();
 
     this.displayedProfile.categories = this.displayedProfile.categories || []

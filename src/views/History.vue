@@ -26,8 +26,11 @@
 </template>
 
 <script>
-import api from "@/api";
 import ClosedJobTable from "@/components/ClosedJobTable.vue"
+import JobApi from "@/api/jobApi";
+
+const jobApi = new JobApi();
+
 
 export default {
   name: "History",
@@ -45,8 +48,8 @@ export default {
   methods: {
     loadUserJobs: async function () {
 
-      let jobs = await api.fetchCurrentUserJobs();
-      let helperJobs = await api.fetchCurrentHelperJobs();
+      let jobs = await jobApi.fetchCurrentUserJobs();
+      let helperJobs = await jobApi.fetchCurrentHelperJobs();
 
       for (let i = 0; i < helperJobs.length; i++) {
         switch (helperJobs[i].status) {

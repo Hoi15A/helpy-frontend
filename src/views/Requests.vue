@@ -166,12 +166,19 @@
 
 <script>
 
-import api from "@/api";
+import JobApi from "@/api/jobApi";
+import UserApi from "@/api/userApi";
+import CategoryApi from "@/api/categoryApi";
+import TagApi from "@/api/tagApi";
 import Selectize from 'vue2-selectize'
 import VueStarRating from "vue-star-rating/src/star-rating";
 import Modal from "@/components/ModalComponent.vue";
 import RequestsJobTable from "@/components/RequestsJobTable.vue";
 
+const userApi = new UserApi();
+const jobApi = new JobApi();
+const categoryApi = new CategoryApi();
+const tagApi = new TagApi();
 export default {
   name: "Requests",
   components: {
@@ -208,8 +215,8 @@ export default {
     },
     loadUserJobs: async function () {
 
-      let jobs = await api.fetchCurrentUserJobs();
-      let helperJobs = await api.fetchCurrentHelperJobs();
+      let jobs = await jobApi.fetchCurrentUserJobs();
+      let helperJobs = await jobApi.fetchCurrentHelperJobs();
 
       for (let i = 0; i < helperJobs.length; i++) {
         this.currentHelperJobs.push(helperJobs[i]);
@@ -233,8 +240,8 @@ export default {
     },
     findMatch: async function(job) {
       try {
-          this.tempOpenMatcherJob = await api.getJobById(job.id);
-          this.availableMatches = await api.findHelperForJobId(job.id);
+          this.tempOpenMatcherJob = await jobApi.getJobById(job.id);
+          this.availableMatches = await jobApi.findHelperForJobId(job.id);
           this.isMatchingModalOpen = true;
           this.helperFound = ((this.availableMatches.length >= 1))
         } catch (e) {
@@ -244,8 +251,9 @@ export default {
     },
     closeJob: async function () {
       let tempJob = this.tempJob
-      await api.addRating(this.tempRating, tempJob.matchedHelper.email);
-      await api.closeJobById(tempJob.id);
+
+      await userApi.addRating(this.tempRating, tempJob.matchedHelper.email);
+      await jobApi.closeJobById(tempJob.id);
 
       let index = this.inProgressJobs.findIndex(j => j.id === tempJob.id);
       this.inProgressJobs.splice(index, 1);
@@ -253,7 +261,7 @@ export default {
     },
     selectHelper: async function (helper) {
       try {
-        let updatedJob = await api.setHelperForJobId(this.tempOpenMatcherJob.id, helper.email);
+        let updatedJob = await jobApi.setHelperForJobId(this.tempOpenMatcherJob.id, helper.email);
         let index = this.openJobs.findIndex(j => j.id === updatedJob.id);
         this.openJobs.splice(index, 1);
         this.inProgressJobs.push(updatedJob);
@@ -268,7 +276,7 @@ export default {
     },
     editJob: async function(job) {
       try {
-        let tempCurrJob = await api.getJobById(job.id);
+        let tempCurrJob = await jobApi.getJobById(job.id);
         tempCurrJob.categories = tempCurrJob.categories.map(en => en.name);
         tempCurrJob.tags = tempCurrJob.tags.map(en => en.name);
         this.currentJob = tempCurrJob;
@@ -280,7 +288,7 @@ export default {
     updateJob: async function() {
       try {
         //DTO Bug mit Status
-        let updatedJob = await api.updateJob(this.currentJob);
+        let updatedJob = await jobApi.updateJob(this.currentJob);
 
         if (updatedJob.status === "OPEN") {
           let index = this.openJobs.findIndex(j => j.id === updatedJob.id);
@@ -305,7 +313,7 @@ export default {
           }
         )
         if (result.isConfirmed) {
-          await api.deleteJobById(job.id);
+          await jobApi.deleteJobById(job.id);
 
           switch (job.status) {
             case "IN_PROGRESS":
@@ -345,8 +353,8 @@ export default {
   },
   beforeMount: async function() {
     this.loadUserJobs();
-    this.availableCategories = await api.fetchCategories();
-    this.availableTags = await api.fetchTags();
+    this.availableCategories = await categoryApi.fetchCategories();
+    this.availableTags = await tagApi.fetchTags();
   }
 };
 </script>

@@ -37,9 +37,11 @@
 </template>
 
 <script>
-import api from "@/api";
+import UserApi from "@/api/userApi";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEnvelope, faKey } from '@fortawesome/free-solid-svg-icons'
+
+const userApi = new UserApi();
 
 library.add(faEnvelope, faKey);
 
@@ -54,7 +56,7 @@ export default {
   methods: {
     login: async function () {
       try {
-        await api.login(this.username, this.password);
+        await userApi.login(this.username, this.password);
         console.log("Logged in");
         await this.$router.push("/");
       } catch (e) {

@@ -104,10 +104,19 @@
 </template>
 
 <script>
-import api from "@/api";
+import Api from "@/api/api";
+import JobApi from "@/api/jobApi";
+import CategoryApi from "@/api/categoryApi";
+import TagApi from "@/api/tagApi";
 import Selectize from 'vue2-selectize'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeading, faCalendar } from '@fortawesome/free-solid-svg-icons'
+
+
+const jobApi = new JobApi();
+const categoryApi = new CategoryApi();
+const tagApi = new TagApi();
+const api = new Api();
 
 library.add(faHeading, faCalendar);
 
@@ -141,10 +150,10 @@ export default {
       this.request.author = await api.getCurrentUser();
 
       try {
-        this.currentJob = await api.addJob(this.request);
+        this.currentJob = await jobApi.addJob(this.request);
 
         try {
-          this.availableMatches = await api.findHelperForJobId(this.currentJob.id);
+          this.availableMatches = await jobApi.findHelperForJobId(this.currentJob.id);
           this.isModalOpen = true;
           this.helperFound = ((this.availableMatches.length >= 1))
         } catch (e) {
@@ -166,7 +175,7 @@ export default {
     selectHelper: async function (helper) {
 
       try {
-        await api.setHelperForJobId(this.currentJob.id, helper.email);
+        await jobApi.setHelperForJobId(this.currentJob.id, helper.email);
 
         await this.$router.push("/requests");
       } catch (e) {
@@ -182,8 +191,8 @@ export default {
     },
   },
   beforeMount: async function() {
-    this.availableCategories = await api.fetchCategories();
-    this.availableTags = await api.fetchTags();
+    this.availableCategories = await categoryApi.fetchCategories();
+    this.availableTags = await tagApi.fetchTags();
   }
 };
 </script>
