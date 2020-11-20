@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import UserApi from "@/userApi";
+import UserApi from "@/api/userApi";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEnvelope, faKey } from '@fortawesome/free-solid-svg-icons'
 

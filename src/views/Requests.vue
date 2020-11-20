@@ -224,10 +224,10 @@
 
 <script>
 
-import JobApi from "@/jobApi";
-import UserApi from "@/userApi";
-import CategoryApi from "@/categoryApi";
-import TagApi from "@/tagApi";
+import JobApi from "@/api/jobApi";
+import UserApi from "@/api/userApi";
+import CategoryApi from "@/api/categoryApi";
+import TagApi from "@/api/tagApi";
 import Selectize from 'vue2-selectize'
 import VueStarRating from "vue-star-rating/src/star-rating";
 

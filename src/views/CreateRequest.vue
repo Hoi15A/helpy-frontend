@@ -104,10 +104,10 @@
 </template>
 
 <script>
-import Api from "@/api";
-import JobApi from "@/jobApi";
-import CategoryApi from "@/categoryApi";
-import TagApi from "@/tagApi";
+import Api from "@/api/api";
+import JobApi from "@/api/jobApi";
+import CategoryApi from "@/api/categoryApi";
+import TagApi from "@/api/tagApi";
 import Selectize from 'vue2-selectize'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeading, faCalendar } from '@fortawesome/free-solid-svg-icons'

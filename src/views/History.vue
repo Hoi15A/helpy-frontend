@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import JobApi from "@/jobApi";
+import JobApi from "@/api/jobApi";
 
 const jobApi = new JobApi();
 

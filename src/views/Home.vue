@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Api from "@/api";
+import Api from "@/api/api";
 
 const api = new Api();
 
