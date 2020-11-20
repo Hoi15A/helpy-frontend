@@ -224,13 +224,18 @@
 
 <script>
 
-import api from "@/api";
+//import api from "@/api1";
 import JobApi from "@/jobApi";
+import UserApi from "@/userApi";
+import CategoryApi from "@/categoryApi";
+import TagApi from "@/tagApi";
 import Selectize from 'vue2-selectize'
 import VueStarRating from "vue-star-rating/src/star-rating";
 
+const userApi = new UserApi();
 const jobApi = new JobApi();
-
+const categoryApi = new CategoryApi();
+const tagApi = new TagApi();
 export default {
   name: "Requests",
   components: {
@@ -265,8 +270,8 @@ export default {
     },
     loadUserJobs: async function () {
 
-      let jobs = await api.fetchCurrentUserJobs();
-      let helperJobs = await api.fetchCurrentHelperJobs();
+      let jobs = await jobApi.fetchCurrentUserJobs();
+      let helperJobs = await jobApi.fetchCurrentHelperJobs();
 
       for (let i = 0; i < helperJobs.length; i++) {
         this.currentHelperJobs.push(helperJobs[i]);
@@ -301,7 +306,7 @@ export default {
     },
     closeJob: async function () {
       let tempJob = this.tempJob
-      await api.addRating(this.tempRating, tempJob.matchedHelper.email)
+      await userApi.addRating(this.tempRating, tempJob.matchedHelper.email)
       await jobApi.closeJobById(tempJob.id)
       await this.$router.go()
     },
@@ -375,8 +380,8 @@ export default {
   },
   beforeMount: async function() {
     this.loadUserJobs();
-    this.availableCategories = await api.fetchCategories();
-    this.availableTags = await api.fetchTags();
+    this.availableCategories = await categoryApi.fetchCategories();
+    this.availableTags = await tagApi.fetchTags();
   }
 };
 </script>

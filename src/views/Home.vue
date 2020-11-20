@@ -35,7 +35,9 @@
 </template>
 
 <script>
-import api from "@/api";
+import Api from "@/api1";
+
+const api = new Api();
 
 export default {
   name: "Home",

@@ -104,12 +104,19 @@
 </template>
 
 <script>
+import Api from "@/api1";
 import JobApi from "@/jobApi";
+import CategoryApi from "@/categoryApi";
+import TagApi from "@/tagApi";
 import Selectize from 'vue2-selectize'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeading, faCalendar } from '@fortawesome/free-solid-svg-icons'
 
+
 const jobApi = new JobApi();
+const categoryApi = new CategoryApi();
+const tagApi = new TagApi();
+const api = new Api();
 
 library.add(faHeading, faCalendar);
 
@@ -140,7 +147,7 @@ export default {
   },
   methods: {
     saveRequest: async function () {
-      this.request.author = await jobApi.getCurrentUser();
+      this.request.author = await api.getCurrentUser();
 
       try {
         this.currentJob = await jobApi.addJob(this.request);
@@ -184,8 +191,8 @@ export default {
     },
   },
   beforeMount: async function() {
-    this.availableCategories = await jobApi.fetchCategories();
-    this.availableTags = await jobApi.fetchTags();
+    this.availableCategories = await categoryApi.fetchCategories();
+    this.availableTags = await tagApi.fetchTags();
   }
 };
 </script>

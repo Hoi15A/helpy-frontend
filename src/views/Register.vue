@@ -85,9 +85,11 @@
 </template>
 
 <script>
-import api from "@/api";
+import UserApi from "@/userApi";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEnvelope, faKey, faIdCard, faCalendar, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
+
+const userApi = new UserApi();
 
 library.add(faEnvelope, faKey, faIdCard, faCalendar, faMapMarkerAlt);
 
@@ -115,7 +117,7 @@ export default {
     registerUser: async function() {
       if (this.validateUser(this.user)) {
         delete this.user.repeatPass;
-        await api.register(this.user);
+        await userApi.register(this.user);
       }
     },
     validateUser: function(user) {
