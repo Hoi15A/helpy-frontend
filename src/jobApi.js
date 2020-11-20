@@ -1,12 +1,12 @@
-import Api1 from './api1'
+import Api from './api1'
 
-export default class JobApi extends Api1 {
+export default class JobApi extends Api {
     constructor() {
         super();
     }
 
     async getJobById (jobId) {
-        let res = await this.customFetch(`${Api1.getApiBaseUrl()}/job/id/${jobId}`);
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/job/id/${jobId}`);
         if (res.ok) {
             return res.json()
         }
@@ -14,7 +14,7 @@ export default class JobApi extends Api1 {
     }
 
     async updateJob (job) {
-        let res = await this.customFetch(`${Api1.getApiBaseUrl()}/job/update/${job.id}`, {
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/job/update/${job.id}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -25,14 +25,14 @@ export default class JobApi extends Api1 {
     }
 
     async setHelperForJobId (jobId, helperEmail) {
-        let res = await this.customFetch(`${Api1.getApiBaseUrl()}/job/id/${jobId}/set-helper/${helperEmail}`, {
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/job/id/${jobId}/set-helper/${helperEmail}`, {
             method: "PUT"
         });
         if (!res.ok) throw new Error(this.parseError(await res.json));
     }
 
     async findHelperForJobId (id) {
-        let res = await this.customFetch(`${Api1.getApiBaseUrl()}/job/id/${id}/find-helper`);
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/job/id/${id}/find-helper`);
         if (res.ok) {
             return res.json();
         } else {
@@ -41,7 +41,7 @@ export default class JobApi extends Api1 {
     }
 
     async addJob (job) {
-        let res = await this.customFetch(`${Api1.getApiBaseUrl()}/job/add`, {
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/job/add`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -56,7 +56,7 @@ export default class JobApi extends Api1 {
     }
 
     async closeJobById(id) {
-        let res = await this.customFetch(`${Api1.getApiBaseUrl()}/job/close/${id}`, {
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/job/close/${id}`, {
             method: "PUT"
         });
         console.log(res)
@@ -64,7 +64,7 @@ export default class JobApi extends Api1 {
     }
 
     async deleteJobById (id) {
-        let res = await super.customFetch(`${Api1.getApiBaseUrl()}/job/remove/${id}`, {
+        let res = await super.customFetch(`${Api.getApiBaseUrl()}/job/remove/${id}`, {
             method: "DELETE"
         });
         if (!res.ok) throw new Error(`Unable to delete job ${id}`);
@@ -72,13 +72,13 @@ export default class JobApi extends Api1 {
 
     async fetchCurrentUserJobs () {
         let currentUser = this.getCurrentUser();
-        let res = await this.customFetch(`${Api1.getApiBaseUrl()}/job/author/${currentUser.email}`);
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/job/author/${currentUser.email}`);
         return res.json();
     }
 
     async fetchCurrentHelperJobs () {
         let currentUser = this.getCurrentUser();
-        let res = await this.customFetch(`${Api1.getApiBaseUrl()}/job/helper/${currentUser.email}`);
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/job/helper/${currentUser.email}`);
         return res.json();
     }
 }

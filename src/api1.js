@@ -1,7 +1,7 @@
 import router from "./router";
 const apiBaseUrl = process.env.NODE_ENV === "production" ? "http://helpyProd.example.com/api" : "http://localhost:8080/api";
 
-export default class Api1 {
+export default class Api {
 
     static getApiBaseUrl() {
         return apiBaseUrl;
