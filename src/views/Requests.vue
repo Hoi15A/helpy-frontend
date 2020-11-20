@@ -4,14 +4,12 @@
     <div class="columns is-centered">
       <div class="column is-three-quarters">
 
-
         <div class="tabs is-medium">
           <ul>
             <li :class="{ 'is-active': selectedRole === 'HelpSeeker' }"><a href="#" @click.prevent="selectedRole = 'HelpSeeker'">Ich suche Hilfe</a></li>
             <li :class="{ 'is-active': selectedRole === 'Helper' }"><a href="#" @click.prevent="selectedRole = 'Helper'">Ich leiste Hilfe</a></li>
           </ul>
         </div>
-
 
         <div v-if="selectedRole === 'Helper'">
           <h2 class="has-text-left table-label">Anträge als Helfer</h2>
@@ -43,164 +41,110 @@
 
         <div v-if="selectedRole === 'HelpSeeker'">
           <h2 class="has-text-left table-label">Laufende Anträge (IN_PROGRESS)</h2>
-          <table class="table is-fullwidth is-hoverable">
-            <thead class="has-text-left">
-            <tr>
-              <th>Antrag</th>
-              <th>Helfer/in</th>
-              <th>Erstelldatum</th>
-              <th class="has-text-centered">Bearbeiten</th>
-            </tr>
-            </thead>
-            <tbody class="has-text-left">
-            <tr v-for="(inProgressJob, index) in inProgressJobs" v-bind:key="inProgressJob.id">
-              <td>{{ inProgressJob.title }}</td>
-              <td>{{ inProgressJob.matchedHelper.firstname }}</td>
-              <td>{{ inProgressJob.created }}</td>
-
-              <td>
-                <div class="buttons">
-                  <button class="button is-danger" @click="deleteJob(inProgressJobs, index)">
-                    Löschen
-                  </button>
-                  <button class="button is-info" @click="jobClosedBySeeker = true; tempJob = inProgressJobs[index]">Job Abschliessen</button>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+          <requests-job-table v-bind:jobs="inProgressJobs"
+                              v-on:delete-job="deleteJob"
+                              v-on:close-job="openRateJobModal">
+          </requests-job-table>
         </div>
 
         <div v-if="selectedRole === 'HelpSeeker'">
-        <h2 class="has-text-left table-label">Offene Anträge (OPEN)</h2>
-        <table class="table is-fullwidth is-hoverable">
-          <thead class="has-text-left">
-          <tr>
-            <th>Antrag</th>
-            <th>Helfer/in</th>
-            <th>Erstelldatum</th>
-            <th class="has-text-centered">Bearbeiten</th>
-          </tr>
-          </thead>
-          <tbody class="has-text-left">
-          <tr v-for="(openJob, index) in openJobs" v-bind:key="openJob.index">
-            <td>{{ openJob.title }}</td>
-            <td>{{ "Unbekannt" }}</td>
-            <td>{{ openJob.created }}</td>
-            <td>
-              <div class="buttons">
-                <button class="button" @click="deleteJob(openJobs, index)">Löschen</button>
-                <button class="button" @click="findMatch(openJob.id)">Match</button>
-                <button class="button" @click="editJob(openJob.id)">Bearbeiten</button>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+          <h2 class="has-text-left table-label">Offene Anträge (OPEN)</h2>
+          <requests-job-table v-bind:jobs="openJobs" 
+                              v-on:delete-job="deleteJob" 
+                              v-on:match-job="findMatch"
+                              v-on:edit-job="editJob">
+          </requests-job-table>
         </div>
       </div>
     </div>
 
-    <div class="modal" v-bind:class="{ 'is-active': isEditingJob }" v-if="this.currentJob !== null">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Antrag editieren</p>
-        </header>
-        <section class="modal-card-body">
-          <div class="field">
-            <label class="label">Titel</label>
-            <div class="control">
-              <input class="input" v-model="currentJob.title" type="text" placeholder="Titel">
-            </div>
-          </div>
+    <modal :class="{ 'is-active': isEditingJob }" v-if="this.currentJob !== null">
+      <template v-slot:title>Antrag editieren</template>
 
-          <div class="field">
-            <label class="label">Kategorien</label>
-            <div class="control">
-              <div class="select is-multiple is-fullwidth">
-                <selectize persist v-model="currentJob.categories" :settings="this.categorySettings">
-                  <option v-for="cat in availableCategories" :key="cat.name" :value="cat.name">{{cat.name}}</option>
-                </selectize>
-              </div>
-            </div>
+      <template v-slot:content>
+        <div class="field">
+          <label class="label">Titel</label>
+          <div class="control">
+            <input class="input" v-model="currentJob.title" type="text" placeholder="Titel">
           </div>
+        </div>
 
-          <div class="field">
-            <label class="label">Tags</label>
-            <div class="control">
-            <selectize v-model="currentJob.tags" :settings="this.tagSettings">
-                <option v-for="tag in availableTags" :key="tag.name" :value="tag.name">{{tag.name}}</option>
+        <div class="field">
+          <label class="label">Kategorien</label>
+          <div class="control">
+            <div class="select is-multiple is-fullwidth">
+              <selectize persist v-model="currentJob.categories" :settings="categorySettings">
+                <option v-for="cat in availableCategories" :key="cat.name" :value="cat.name">{{cat.name}}</option>
               </selectize>
             </div>
           </div>
+        </div>
 
-          <div class="field">
-            <label class="label">Ablaufdatum</label>
-            <div class="control">
-              <input class="input" v-model="currentJob.dueDate" type="date" placeholder="Verfügbarkeit">
-            </div>
+        <div class="field">
+          <label class="label">Tags</label>
+          <div class="control">
+            <selectize v-model="currentJob.tags" :settings="tagSettings">
+              <option v-for="tag in availableTags" :key="tag.name" :value="tag.name">{{tag.name}}</option>
+            </selectize>
           </div>
+        </div>
 
-          <div class="field">
-            <label class="label">Beschreibung</label>
-            <div class="control">
-              <textarea class="textarea" v-model="currentJob.description" placeholder="Ich brauche hilfe mit ..."></textarea>
-            </div>
+        <div class="field">
+          <label class="label">Ablaufdatum</label>
+          <div class="control">
+            <input class="input" v-model="currentJob.dueDate" type="date" placeholder="Verfügbarkeit">
           </div>
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-success" @click="updateJob()">Aktualisieren</button>
-          <button class="button" @click="isEditingJob=false">Schliessen</button>
-        </footer>
-      </div>
-    </div>
+        </div>
 
-    <div class="modal" v-bind:class="{ 'is-active': isMatchingModalOpen }">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title" v-if="helperFound">Helper gefunden!</p>
-          <p class="modal-card-title" v-else>Es wurde leider noch kein Helfer für Sie gefunden</p>
-        </header>
-        <section class="modal-card-body">
-          <table class="table is-fullwidth is-hoverable" v-if="helperFound">
-            <thead>
+        <div class="field">
+          <label class="label">Beschreibung</label>
+          <div class="control">
+            <textarea class="textarea" v-model="currentJob.description" placeholder="Ich brauche hilfe mit ..."></textarea>
+          </div>
+        </div>
+      </template>
+
+      <template v-slot:footer>
+        <button class="button is-success" @click="updateJob()">Aktualisieren</button>
+        <button class="button" @click="isEditingJob=false">Schliessen</button>
+      </template>
+    </modal>
+
+    <modal :class="{ 'is-active': isMatchingModalOpen }" v-on:close-modal="isMatchingModalOpen = false">
+      <template v-slot:title v-if="helperFound">Helper gefunden!</template>
+      <template v-slot:title v-else>Es wurde leider noch kein Helfer für Sie gefunden</template>
+
+      <template v-slot:content>
+        <table class="table is-fullwidth is-hoverable" v-if="helperFound">
+          <thead>
             <tr>
               <th>Helfer/in</th>
               <th>Biografie</th>
               <th>Standort</th>
               <th>Auswählen</th>
             </tr>
-            </thead>
-            <tbody>
+          </thead>
+          <tbody>
             <tr v-for="helper in availableMatches" v-bind:key="helper">
               <td>{{ helper.firstname + " " + helper.lastname }}</td>
               <td>{{ helper.biographie }}</td>
               <td>{{ helper.plz }}</td>
               <td>
-                <button class="button" @click="selectHelper(helper)">Auswählen</button> <!-- index needs to be from jobs not helper(helper)
-                rename helper to user. -->
+                <button class="button" @click="selectHelper(helper)">Auswählen</button>
               </td>
             </tr>
-            </tbody>
-          </table>
-          <p class="modal-card-body" v-else>Sie können ihren Antrag unter Anträge nochmals matchen</p>
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button" @click="isMatchingModalOpen=false">Schliessen</button>
-        </footer>
-      </div>
-    </div>
+          </tbody>
+        </table>
+      </template>
 
+      <template v-slot:footer>
+        <button class="button" @click="isMatchingModalOpen=false">Schliessen</button>
+      </template>
+    </modal>
 
-    <div class="modal" v-bind:class="{ 'is-active': jobClosedBySeeker }">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Bewerten Sie Ihren Helper</p>
-        </header>
-        <section class="modal-card-body">
+    <modal :class="{ 'is-active': jobClosedBySeeker }">
+      <template v-slot:title>Bewerten Sie Ihren Helper</template>
+      <template v-slot:content>
           <div class="test">
             <vue-star-rating v-bind:increment="1"
                              v-bind:max-rating="5"
@@ -211,14 +155,12 @@
                              @rating-selected ="setRating">
             </vue-star-rating>
           </div>
-        </section>
-        <footer class="modal-card-foot">
+      </template>
+      <template v-slot:footer>
           <button class="button" @click="jobClosedBySeeker=false">Abbrechen</button>
           <button class="button" @click="closeJob()">Rating bestätigen</button>
-        </footer>
-      </div>
-    </div>
-
+      </template>
+    </modal>
   </div>
 </template>
 
@@ -230,6 +172,8 @@ import CategoryApi from "@/api/categoryApi";
 import TagApi from "@/api/tagApi";
 import Selectize from 'vue2-selectize'
 import VueStarRating from "vue-star-rating/src/star-rating";
+import Modal from "@/components/ModalComponent.vue";
+import RequestsJobTable from "@/components/RequestsJobTable.vue";
 
 const userApi = new UserApi();
 const jobApi = new JobApi();
@@ -239,7 +183,9 @@ export default {
   name: "Requests",
   components: {
     Selectize,
-    VueStarRating
+    VueStarRating,
+    Modal,
+    RequestsJobTable
   },
   data: function() {
     return {
@@ -292,10 +238,10 @@ export default {
         }
       }
     },
-    findMatch: async function(jobId) {
+    findMatch: async function(job) {
       try {
-          this.tempOpenMatcherJob = await jobApi.getJobById(jobId);
-          this.availableMatches = await jobApi.findHelperForJobId(jobId);
+          this.tempOpenMatcherJob = await jobApi.getJobById(job.id);
+          this.availableMatches = await jobApi.findHelperForJobId(job.id);
           this.isMatchingModalOpen = true;
           this.helperFound = ((this.availableMatches.length >= 1))
         } catch (e) {
@@ -305,14 +251,20 @@ export default {
     },
     closeJob: async function () {
       let tempJob = this.tempJob
-      await userApi.addRating(this.tempRating, tempJob.matchedHelper.email)
-      await jobApi.closeJobById(tempJob.id)
-      await this.$router.go()
+
+      await userApi.addRating(this.tempRating, tempJob.matchedHelper.email);
+      await jobApi.closeJobById(tempJob.id);
+
+      let index = this.inProgressJobs.findIndex(j => j.id === tempJob.id);
+      this.inProgressJobs.splice(index, 1);
+      this.jobClosedBySeeker = false;
     },
     selectHelper: async function (helper) {
       try {
-        await jobApi.setHelperForJobId(this.tempOpenMatcherJob.id, helper.email);
-        await this.$router.go()
+        let updatedJob = await jobApi.setHelperForJobId(this.tempOpenMatcherJob.id, helper.email);
+        let index = this.openJobs.findIndex(j => j.id === updatedJob.id);
+        this.openJobs.splice(index, 1);
+        this.inProgressJobs.push(updatedJob);
 
       } catch (e) {
         console.error(e);
@@ -322,9 +274,9 @@ export default {
       }
 
     },
-    editJob: async function(jobId) {
+    editJob: async function(job) {
       try {
-        let tempCurrJob = await jobApi.getJobById(jobId);
+        let tempCurrJob = await jobApi.getJobById(job.id);
         tempCurrJob.categories = tempCurrJob.categories.map(en => en.name);
         tempCurrJob.tags = tempCurrJob.tags.map(en => en.name);
         this.currentJob = tempCurrJob;
@@ -336,14 +288,19 @@ export default {
     updateJob: async function() {
       try {
         //DTO Bug mit Status
-        await jobApi.updateJob(this.currentJob)
-        this.isEditingJob = false
-        await this.$router.go()
+        let updatedJob = await jobApi.updateJob(this.currentJob);
+
+        if (updatedJob.status === "OPEN") {
+          let index = this.openJobs.findIndex(j => j.id === updatedJob.id);
+          this.openJobs.splice(index, 1, updatedJob);
+        }
+
+        this.isEditingJob = false;
       } catch (e) {
         console.error(e);
       }
     },
-    deleteJob: async function(jobList, i) {
+    deleteJob: async function(job) {
       try {
         let result = await this.$swal(
           {
@@ -356,8 +313,20 @@ export default {
           }
         )
         if (result.isConfirmed) {
-          await jobApi.deleteJobById(jobList[i].id);
-          jobList.splice(i, 1);
+          await jobApi.deleteJobById(job.id);
+
+          switch (job.status) {
+            case "IN_PROGRESS":
+              this.inProgressJobs.splice(this.inProgressJobs.indexOf(job), 1);
+              break;
+            case "OPEN":
+              this.openJobs.splice(this.openJobs.indexOf(job), 1);
+              break;
+            default:
+              console.error("Deleted a job that isnt deletable");
+              break;
+          }
+          
           this.$swal(
             {
               title: 'Antrag gelöscht.',
@@ -376,6 +345,10 @@ export default {
             }
           )
       }
+    },
+    openRateJobModal: async function (job) {
+      this.jobClosedBySeeker = true;
+      this.tempJob = job;
     }
   },
   beforeMount: async function() {

@@ -11,48 +11,13 @@
         </div>
         <div v-if="this.selectedRole === 'HelpSeeker'">
           <h2 class="has-text-left table-label">Abgeschlossene Anträge (CLOSED)</h2>
-          <table class="table is-fullwidth is-hoverable">
-            <thead class="has-text-left">
-            <tr>
-              <th>Antrag</th>
-              <th>Helfer/in</th>
-              <th>Erstelldatum</th>
-              <th>Points</th>
-            </tr>
-            </thead>
-            <tbody class="has-text-left">
-            <tr v-for="closedJob in closedJobs" v-bind:key="closedJob.value">
-              <td>{{ closedJob.title }}</td>
-              <td>{{ closedJob.matchedHelper ? closedJob.matchedHelper.firstname : "Kein Helfer" }}</td>
-              <td>{{ closedJob.created }}</td>
-              <td>0</td>
-            </tr>
-            </tbody>
-          </table>
+          <closed-job-table v-bind:jobs="closedJobs"></closed-job-table>
         </div>
 
 
         <div v-if="this.selectedRole === 'Helper'">
           <h2 class="has-text-left table-label">Abgeschlossene Anträge als Helper(CLOSED)</h2>
-          <table class="table is-fullwidth is-hoverable">
-            <thead class="has-text-left">
-            <tr>
-              <th>Titel</th>
-              <th>Helfer/in</th>
-              <th>Erstelldatum</th>
-              <th>Points</th>
-            </tr>
-            </thead>
-            <tbody class="has-text-left">
-            <tr v-for="closedJobAsHelper in closedJobsAsHelper" v-bind:key="closedJobAsHelper.value">
-              <td>{{ closedJobAsHelper.title }}</td>
-              <td>{{ closedJobAsHelper.matchedHelper ? closedJobAsHelper.matchedHelper.firstname : "Kein Helfer" }}</td>
-              <td>{{ closedJobAsHelper.created }}</td>
-              <td>{{ "Points" }}</td>
-              <td>0</td>
-            </tr>
-            </tbody>
-          </table>
+          <closed-job-table v-bind:jobs="closedJobsAsHelper"></closed-job-table>
         </div>
 
       </div>
@@ -61,12 +26,17 @@
 </template>
 
 <script>
+import ClosedJobTable from "@/components/ClosedJobTable.vue"
 import JobApi from "@/api/jobApi";
 
 const jobApi = new JobApi();
 
+
 export default {
   name: "History",
+  components : {
+    ClosedJobTable
+  },
   data: function () {
     return {
       closedJobs: [],

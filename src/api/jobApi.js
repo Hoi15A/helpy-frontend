@@ -22,6 +22,7 @@ export default class JobApi extends Api {
             body: JSON.stringify(job)
         });
         if (!res.ok) throw new Error(this.parseError(await res.json));
+        return res.json();
     }
 
     async setHelperForJobId (jobId, helperEmail) {
@@ -29,6 +30,7 @@ export default class JobApi extends Api {
             method: "PUT"
         });
         if (!res.ok) throw new Error(this.parseError(await res.json));
+        return res.json();
     }
 
     async findHelperForJobId (id) {
