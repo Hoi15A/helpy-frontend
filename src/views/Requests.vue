@@ -225,8 +225,11 @@
 <script>
 
 import api from "@/api";
+import JobApi from "@/jobApi";
 import Selectize from 'vue2-selectize'
 import VueStarRating from "vue-star-rating/src/star-rating";
+
+const jobApi = new JobApi();
 
 export default {
   name: "Requests",
@@ -287,8 +290,8 @@ export default {
     },
     findMatch: async function(jobId) {
       try {
-          this.tempOpenMatcherJob = await api.getJobById(jobId);
-          this.availableMatches = await api.findHelperForJobId(jobId);
+          this.tempOpenMatcherJob = await jobApi.getJobById(jobId);
+          this.availableMatches = await jobApi.findHelperForJobId(jobId);
           this.isMatchingModalOpen = true;
           this.helperFound = ((this.availableMatches.length >= 1))
         } catch (e) {
@@ -299,12 +302,12 @@ export default {
     closeJob: async function () {
       let tempJob = this.tempJob
       await api.addRating(this.tempRating, tempJob.matchedHelper.email)
-      await api.closeJobById(tempJob.id)
+      await jobApi.closeJobById(tempJob.id)
       await this.$router.go()
     },
     selectHelper: async function (helper) {
       try {
-        await api.setHelperForJobId(this.tempOpenMatcherJob.id, helper.email);
+        await jobApi.setHelperForJobId(this.tempOpenMatcherJob.id, helper.email);
         await this.$router.go()
 
       } catch (e) {
@@ -317,7 +320,7 @@ export default {
     },
     editJob: async function(jobId) {
       try {
-        let tempCurrJob = await api.getJobById(jobId);
+        let tempCurrJob = await jobApi.getJobById(jobId);
         tempCurrJob.categories = tempCurrJob.categories.map(en => en.name);
         tempCurrJob.tags = tempCurrJob.tags.map(en => en.name);
         this.currentJob = tempCurrJob;
@@ -329,7 +332,7 @@ export default {
     updateJob: async function() {
       try {
         //DTO Bug mit Status
-        await api.updateJob(this.currentJob)
+        await jobApi.updateJob(this.currentJob)
         this.isEditingJob = false
       } catch (e) {
         console.error(e);
@@ -348,7 +351,7 @@ export default {
           }
         )
         if (result.isConfirmed) {
-          await api.deleteJobById(jobList[i].id);
+          await jobApi.deleteJobById(jobList[i].id);
           jobList.splice(i, 1);
           this.$swal(
             {

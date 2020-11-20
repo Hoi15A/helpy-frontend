@@ -1,8 +1,7 @@
 import router from "./router";
 const apiBaseUrl = process.env.NODE_ENV === "production" ? "http://helpyProd.example.com/api" : "http://localhost:8080/api";
 
-export class Api1 {
-
+export default class Api1 {
 
     static getApiBaseUrl() {
         return apiBaseUrl;
@@ -40,7 +39,7 @@ export class Api1 {
         let res = await fetch(url, options);
 
         if (res.status === 401) {
-             handleUnauthorized();
+             this.handleUnauthorized();
         }
         return res;
     }
