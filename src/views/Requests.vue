@@ -338,6 +338,7 @@ export default {
         //DTO Bug mit Status
         await jobApi.updateJob(this.currentJob)
         this.isEditingJob = false
+        await this.$router.go()
       } catch (e) {
         console.error(e);
       }
