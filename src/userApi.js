@@ -90,19 +90,6 @@ export default class UserApi extends Api {
     }
 
     /**
-     * Fetch the current user from localstorage
-     *
-     * @returns {User} Logged in user
-     */
-    getCurrentUser () {
-        let currentUser = JSON.parse(localStorage.getItem("helpyUser"));
-        if(!currentUser) {
-            this.handleUnauthorized();
-        }
-        return currentUser;
-    }
-
-    /**
      * Update the currently logged user with new data
      *
      * @param updatedUser

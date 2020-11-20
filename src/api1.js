@@ -7,6 +7,19 @@ export default class Api {
         return apiBaseUrl;
     }
 
+    /**
+     * Fetch the current user from localstorage
+     *
+     * @returns {User} Logged in user
+     */
+    getCurrentUser () {
+        let currentUser = JSON.parse(localStorage.getItem("helpyUser"));
+        if(!currentUser) {
+            this.handleUnauthorized();
+        }
+        return currentUser;
+    }
+
     handleUnauthorized() {
         localStorage.removeItem("helpyUser");
         router.push("/login");
