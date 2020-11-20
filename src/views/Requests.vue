@@ -111,7 +111,7 @@
     </modal>
 
     <modal :class="{ 'is-active': isMatchingModalOpen }" v-on:close-modal="isMatchingModalOpen = false">
-      <template v-slot:title v-if="helperFound">Helper gefunden!</template>
+      <template v-slot:title v-if="helperFound">Helfer/in gefunden!</template>
       <template v-slot:title v-else>Es wurde leider noch kein Helfer für Sie gefunden</template>
 
       <template v-slot:content>
