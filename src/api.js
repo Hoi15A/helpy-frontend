@@ -222,6 +222,7 @@ export default {
             method: "PUT"
         });
         if (!res.ok) throw new Error(parseError(await res.json));
+        return res.json();
     },
 
     getJobById: async function (jobId) {
@@ -241,6 +242,7 @@ export default {
             body: JSON.stringify(job)
         });
         if (!res.ok) throw new Error(parseError(await res.json));
+        return res.json();
     }
 }
 
