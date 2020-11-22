@@ -119,18 +119,17 @@
           <thead>
             <tr>
               <th>Helfer/in</th>
-              <th>Biografie</th>
-              <th>Standort</th>
               <th>Auswählen</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="helper in availableMatches" v-bind:key="helper">
               <td>{{ helper.firstname + " " + helper.lastname }}</td>
-              <td>{{ helper.biographie }}</td>
-              <td>{{ helper.plz }}</td>
               <td>
-                <button class="button" @click="selectHelper(helper)">Auswählen</button>
+                <div class="buttons">
+                  <button class="button is-success" @click="selectHelper(helper)">Auswählen</button>
+                  <button class="button is-info" @click="showProfile(helper)">Profil anzeigen</button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -161,6 +160,33 @@
           <button class="button" @click="closeJob()">Rating bestätigen</button>
       </template>
     </modal>
+
+    <modal :class="{ 'is-active': openMatcherProfileModal }">
+      <template v-slot:title>Matcher Profile</template>
+      <template v-slot:content>
+        <div class="matcherProfile">
+          <table class="table is-fullwidth is-hoverable">
+            <thead class="has-text-left">
+            <tr>
+              <th>Profile</th>
+            </tr>
+            </thead>
+            <tbody class="has-text-left">
+              <tr><td>{{ "Name: " + tempDisplayedHelper.firstname + " " + tempDisplayedHelper.lastname }}</td></tr>
+              <tr><td>{{ "Email: " + tempDisplayedHelper.email }}</td></tr>
+              <tr><td>{{ "Postleitzahl: " + tempDisplayedHelper.plz }}</td></tr>
+              <tr><td>{{ "Jahrgang: " + tempDisplayedHelper.birthdate.slice(0, 4) }}</td></tr>
+              <tr><td>{{ "Kategorien: " + tempDisplayedHelper.categories.map(category => ` ${category.name.trim("\"")}`) }}</td></tr>
+              <tr><td>{{ "Tags: " + tempDisplayedHelper.tags.map(tag => ` ${tag.name.trim("\"")}`) }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <button class="button" @click="openMatcherProfileModal=false">Schliessen</button>
+      </template>
+    </modal>
+
   </div>
 </template>
 
@@ -199,14 +225,16 @@ export default {
       isMatchingModalOpen: false,
       isEditingJob: false,
       helperFound: false,
+      openMatcherProfileModal: false,
+      jobClosedBySeeker: false,
       selectedRole: 'HelpSeeker',
       currentJob: null,
       categorySettings: {selectOnTab: true, maxItems: 5, highlight: true},
       tagSettings: {selectOnTab: true, maxItems: 5, highlight: true},
-      jobClosedBySeeker: false,
       tempRating: null,
       tempJob: {},
-      tempOpenMatcherJob: {}
+      tempOpenMatcherJob: {},
+      tempDisplayedHelper: {}
     };
   },
   methods: {
@@ -273,6 +301,14 @@ export default {
         this.helperFound = false;
       }
 
+    },
+    showProfile: async function(helper) {
+      try {
+        this.tempDisplayedHelper = helper;
+        this.openMatcherProfileModal = true;
+      } catch (e) {
+        console.error(e);
+      }
     },
     editJob: async function(job) {
       try {
