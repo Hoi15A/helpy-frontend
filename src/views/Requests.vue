@@ -162,13 +162,13 @@
     </modal>
 
     <modal :class="{ 'is-active': openMatcherProfileModal }">
-      <template v-slot:title>Matcher Profile</template>
+      <template v-slot:title>Helfer Profil</template>
       <template v-slot:content>
         <div class="matcherProfile">
           <table class="table is-fullwidth is-hoverable">
             <thead class="has-text-left">
             <tr>
-              <th>Profile</th>
+              <th>Profil</th>
             </tr>
             </thead>
             <tbody class="has-text-left">
