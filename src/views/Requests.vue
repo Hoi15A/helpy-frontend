@@ -145,7 +145,7 @@
     <modal :class="{ 'is-active': jobClosedBySeeker }">
       <template v-slot:title>Bewerten Sie Ihren Helper</template>
       <template v-slot:content>
-          <div class="test">
+          <div class="rating">
             <vue-star-rating v-bind:increment="1"
                              v-bind:max-rating="5"
                              :show-rating="false"
