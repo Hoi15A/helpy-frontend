@@ -22,10 +22,11 @@
                 <button class="button is-outlined is-rounded is-success">Antrag erstellen</button>
               </router-link>
             </div>
-
-            <div class="navbar-item">
-              Points: 0 <!-- TODO: alter when points implemented in backend -->
+            <!--
+            <div class="navbar-item" id="points">
+              Punktestand: {{ pts }}
             </div>
+            -->
             <div class="profile-picture">
               <router-link to="/profile">
                 <figure class="image is-48x48 is-centered">
@@ -52,6 +53,16 @@
     </footer>
   </div>
 </template>
+
+<script>
+export default {
+  data: function() {
+    return {
+      points: 0,
+    }
+  }
+}
+</script>
 
 <style lang="less">
 @import url("../node_modules/normalize.css/normalize.css");

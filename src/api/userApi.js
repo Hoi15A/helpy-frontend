@@ -77,6 +77,33 @@ export default class UserApi extends Api {
         }
     }
 
+    async getTopTenUsers () {
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/user/points/top-ten`);
+        if (res.ok) {
+            return res.json();
+        } else {
+            throw new Error(`Failed to retrieve top users.`);
+        }
+    }
+
+    async getPoints(email) {
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/user/points/${email}`);
+        if (res.ok) {
+            return res.json();
+        } else {
+            throw new Error(`Failed to retrieve user points.`);
+        }
+    }
+
+    async getLatestRating(email) {
+        let res = await this.customFetch(`${Api.getApiBaseUrl()}/user/rating/latest/${email}`);
+        if (res.ok) {
+            return res.json();
+        } else {
+            throw new Error(`Failed to retrieve user points.`);
+        }
+    }
+
     /**
      * Fetch a user from the api
      *

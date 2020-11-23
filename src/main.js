@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 Vue.use(VueSweetalert2);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.prototype.rating = 0;
 
 
 Vue.config.productionTip = false;
