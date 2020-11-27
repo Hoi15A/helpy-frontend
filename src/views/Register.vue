@@ -68,6 +68,12 @@
         </div>
 
         <div class="field">
+          <div class="control">
+            <textarea class="textarea" v-model="user.biographie" placeholder="Biographie"></textarea>
+          </div>
+        </div>
+
+        <div class="field">
           <div class="buttons">
             <div class="control">
               <button class="button is-info" v-on:click="registerUser()">Registrieren</button>
@@ -94,10 +100,10 @@ const userApi = new UserApi();
 library.add(faEnvelope, faKey, faIdCard, faCalendar, faMapMarkerAlt);
 
 export default {
-  name: "Home",
+  name: "Register",
   data: function() {
     return {
-      user: { // TODO: This is just copy pasted stuff from the db directly, map to actual input
+      user: {
         type: "Helpseeker",
         email: "",
         password: "",
@@ -107,7 +113,7 @@ export default {
         sex: "M",
         plz: "",
         birthdate: "",
-        biographie: "Ich heisse Ahmed und bin 17 Jahre alt und bin seit 2015 in der Schweiz und komme aus Afghanistan. Ich wohne in Winterthur und gehe im Moment in die 10. Klasse. Ich schaue gerne Fussball und spiele beim SC Veltheim in der U19 2. Mannschaft. Ich habe Probleme mit Schreiben und Lesen von wichtigen Papieren in der Schweiz und verstehe sie nicht alle.",
+        biographie: "",
         status: "INACTIVE",
         permission: "USER"
       }
@@ -116,8 +122,26 @@ export default {
   methods: {
     registerUser: async function() {
       if (this.validateUser(this.user)) {
-        delete this.user.repeatPass;
-        await userApi.register(this.user);
+        // delete this.user.repeatPass;
+
+        let success = true;
+
+        try {
+          await userApi.register(this.user);
+        } catch (e) {
+          success = false;
+          this.$swal(
+              'Registration Fehlgeschlagen',
+              e.message,
+              'error'
+          )
+        }
+
+        if (success) {
+          await userApi.login(this.user.email, this.user.password);
+          await this.$router.push("/");
+        }
+
       }
     },
     validateUser: function(user) {
@@ -128,9 +152,9 @@ export default {
               icon: 'error'
             }
         )
-        return true;
+        return false;
       }
-      return false;
+      return true;
     }
   }
 };

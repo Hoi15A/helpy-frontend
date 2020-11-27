@@ -1,4 +1,5 @@
-import router from "../router";
+//import router from "@/router";
+//let router = null;
 const apiBaseUrl = process.env.NODE_ENV === "production" ? "http://helpyProd.example.com/api" : "http://localhost:8080/api";
 
 export default class Api {
@@ -22,7 +23,7 @@ export default class Api {
 
     handleUnauthorized() {
         localStorage.removeItem("helpyUser");
-        router.push("/login");
+        //router.push("/login");
     }
 
     /**

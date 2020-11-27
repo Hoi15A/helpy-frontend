@@ -1,10 +1,6 @@
-import Api from './api'
+import Api from '@/api/api'
 
 export default class UserApi extends Api {
-
-    constructor() {
-        super();
-    }
 
     /**
      * Log in user
@@ -51,8 +47,13 @@ export default class UserApi extends Api {
             },
             body: JSON.stringify(newUser)
         });
-        let createdUser = await res.json();
-        this.setCurrentUser(createdUser);
+        let responseData = await res.json();
+        console.log(responseData);
+        if (res.ok) {
+            this.setCurrentUser(responseData);
+        } else {
+            throw Error(responseData.details.join("<br>"));
+        }
     }
 
     /**
