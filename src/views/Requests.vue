@@ -42,6 +42,7 @@
         <div v-if="selectedRole === 'HelpSeeker'">
           <h2 class="has-text-left table-label">Laufende Anträge (IN_PROGRESS)</h2>
           <requests-job-table v-bind:jobs="inProgressJobs"
+                              v-on:open-profile="showProfileFromJob"
                               v-on:delete-job="deleteJob"
                               v-on:close-job="openRateJobModal">
           </requests-job-table>
@@ -174,6 +175,7 @@
             <tbody class="has-text-left">
               <tr><td>{{ "Name: " + tempDisplayedHelper.firstname + " " + tempDisplayedHelper.lastname }}</td></tr>
               <tr><td>{{ "Email: " + tempDisplayedHelper.email }}</td></tr>
+              <tr><td>{{ "Biographie: " + tempDisplayedHelper.biographie }}</td></tr>
               <tr><td>{{ "Postleitzahl: " + tempDisplayedHelper.plz }}</td></tr>
               <tr><td>{{ "Jahrgang: " + tempDisplayedHelper.birthdate.slice(0, 4) }}</td></tr>
               <tr><td>{{ "Kategorien: " + tempDisplayedHelper.categories.map(category => ` ${category.name.trim("\"")}`) }}</td></tr>
@@ -305,6 +307,15 @@ export default {
     showProfile: async function(helper) {
       try {
         this.tempDisplayedHelper = helper;
+        this.openMatcherProfileModal = true;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    showProfileFromJob: async function(job) {
+      try {
+        let tempCurrJob = await jobApi.getJobById(job.id);
+        this.tempDisplayedHelper = tempCurrJob.matchedHelper;
         this.openMatcherProfileModal = true;
       } catch (e) {
         console.error(e);

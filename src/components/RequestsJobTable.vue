@@ -16,18 +16,27 @@
 
                 <td>
                     <div class="buttons" v-if="job.status === 'IN_PROGRESS'">
+                      <div class="control">
                         <button class="button is-danger" @click="$emit('delete-job', job)">
                             <span class="icon is-small">
                                 <font-awesome-icon icon="trash-alt" />
                             </span>
                             <span>Löschen</span>
                         </button>
+                      </div>
+                      <div class="control">
+                        <button class="button" @click="$emit('open-profile', job)">
+                          <span>Match ansehen</span>
+                        </button>
+                      </div>
+                      <div class="control">
                         <button class="button is-info" @click="$emit('close-job', job)">
                             <span class="icon is-small">
-                                    <font-awesome-icon icon="clipboard-check" />
-                                </span>
-                                <span>Job Abschliessen</span>
+                                <font-awesome-icon icon="clipboard-check" />
+                            </span>
+                            <span>Job Beenden</span>
                         </button>
+                      </div>
                     </div>
 
                     <div class="buttons" v-if="job.status === 'OPEN'">
