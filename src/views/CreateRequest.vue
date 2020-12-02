@@ -89,7 +89,7 @@
                 </tr>
                 </tbody>
               </table>
-              <p class="modal-card-body" v-else>Sie können ihren Antrag unter Anträge nochmals matchen</p>
+              <p class="modal-card-body" v-else>Du kannst deinen Antrag unter Anträge nochmals matchen</p>
             </section>
             <footer class="modal-card-foot">
               <button class="button" @click="$router.push('/requests')" v-if="!helperFound">Anträge</button>
