@@ -1,36 +1,57 @@
 <template>
   <div id="home">
-    <h1>Willkommen {{username}}</h1>
-    <hr>
-    <div class="info-text">
-      <p>Jobs mit potenziellen Matches: {{matches}}</p>
-      <p>Anzahl offener Anträge: {{openJobCounter}}</p>
-      <p>Deine letzte Bewertung: {{rating}}</p>
-      <p>Du hast insgesamt {{points}} Punkte.</p>
+    <div v-if="loggedIn">
+      <h1>Willkommen {{username}}</h1>
+      <hr>
+      <div class="info-text">
+        <p>Jobs mit potenziellen Matches: {{matches}}</p>
+        <p>Anzahl offener Anträge: {{openJobCounter}}</p>
+        <p>Deine letzte Bewertung: {{rating}}</p>
+        <p>Du hast insgesamt {{points}} Punkte.</p>
+      </div>
+      <hr>
+      <label>Die besten Helfer des Monats</label>
+      <table class="table is-fullwidth is-hoverable">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Alter</th>
+          <th>Rang</th>
+          <th>Punkte</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in tableData" v-bind:key="item.value">
+          <td v-if="!item.editing">{{item.name}}</td>
+          <td v-if="!item.editing">{{item.age}}</td>
+          <td v-if="!item.editing">{{item.rank}}</td>
+          <td v-if="!item.editing">{{item.points}}</td>
+        </tr>
+        </tbody>
+      </table>
     </div>
-    <hr>
-    <label>Die besten Helfer des Monats</label>
-    <table class="table is-fullwidth is-hoverable">
-      <thead>
-      <tr>
-        <th>Name</th>
-        <th>Alter</th>
-        <th>Rang</th>
-        <th>Punkte</th>
 
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="item in tableData" v-bind:key="item.value">
-        <td v-if="!item.editing">{{item.name}}</td>
-        <td v-if="!item.editing">{{item.age}}</td>
-        <td v-if="!item.editing">{{item.rank}}</td>
-        <td v-if="!item.editing">{{item.points}}</td>
-      </tr>
-      </tbody>
-    </table>
+    <div v-else>
+      <h1>Willkommen bei Helpy</h1>
+      <hr>
+      <p>
+        Helpy ist eine Hilfeplatform bei der du Hilfe suchen sowie anbieten kannst.
+      </p>
+      <div class="buttons is-centered">
+        <div class="control">
+          <button class="button is-info" @click="$router.push('/login')">
+            <span>Anmelden</span>
+          </button>
+        </div>
+        <div class="control">
+          <button class="button" @click="$router.push('/register')">
+            <span>Registrieren</span>
+          </button>
+        </div>
+      </div>
 
-
+    </div>
   </div>
 </template>
 
@@ -38,7 +59,7 @@
 import UserApi from "@/api/userApi";
 import JobApi from "@/api/jobApi"
 
-const api = new UserApi();
+const userApi = new UserApi();
 const jobApi = new JobApi();
 
 export default {
@@ -52,15 +73,16 @@ export default {
       rating: "Noch keine Bewertung",
       matches: "Noch keine neuen Matches gefunden",
       openJobCounter: 0,
+      loggedIn: false
     };
   },
   methods: {
     fetchUser: async function () {
-      let user = api.getCurrentUser();
+      let user = userApi.getCurrentUser();
       this.username = user.firstname + " " + user.lastname;
     },
     fetchTopUsers: async function () {
-      let users = await api.getTopTenUsers();
+      let users = await userApi.getTopTenUsers();
       let rank = 1;
       users.forEach(user => {
         let userDate = new Date(user.birthdate);
@@ -73,11 +95,11 @@ export default {
       });
     },
     fetchPoints: async function() {
-      let points = await api.getPoints(api.getCurrentUser().email);
+      let points = await userApi.getPoints(userApi.getCurrentUser().email);
       this.points = points;
     },
     getLatestRating: async function() {
-      let rating = await api.getLatestRating(api.getCurrentUser().email);
+      let rating = await userApi.getLatestRating(userApi.getCurrentUser().email);
       if (rating > -1) {
         this.rating = rating;
       }
@@ -100,12 +122,18 @@ export default {
       this.openJobCounter = this.jobs.length;
     },
   },
-  beforeMount: function() {
-    this.fetchUser();
-    this.fetchTopUsers();
-    this.fetchPoints();
-    this.getLatestRating();
-    this.getJobs();
+  beforeMount: async function() {
+    try {
+      await this.fetchUser();
+      await this.fetchTopUsers();
+      await this.fetchPoints();
+      await this.getLatestRating();
+      await this.getJobs();
+      this.loggedIn = true;
+    } catch (e) {
+      // not logged in or other issue
+      console.error(e);
+    }
   }
 };
 
