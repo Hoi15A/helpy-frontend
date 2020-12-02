@@ -12,9 +12,13 @@
         <button class="button" @click="logout()">Logout</button>
 
         <div class="field has-text-left">
+          <label class="label">Punktestand: {{points}}</label>
+        </div>
+
+        <div class="field has-text-left">
           <label class="label">Email</label>
           <div class="control">
-            <input disabled class="input" v-model="displayedProfile.email" type="mail" placeholder="mail@provider.tld">
+            <input class="input" v-model="displayedProfile.email" type="mail" placeholder="mail@provider.tld">
           </div>
         </div>
 
@@ -36,38 +40,40 @@
           <label class="label">Freie Tage</label>
           <div class="control">
             <div class="select is-multiple is-fullwidth">
-              <select multiple size="3" v-model="displayedProfile.availableWeekDays">
-                <option v-for="weekday in availableDates" :key="weekday" :value="weekday">{{weekday}}</option>
-              </select>
+              <selectize persist v-model="displayedProfile.availableWeekDays" :settings="availableDatesSettings">
+                <option v-for="date in availableDates" :key="date" :value="date">{{date}}</option>
+              </selectize>
             </div>
           </div>
         </div>
 
         <div class="field has-text-left">
           <label class="label">Ich will helfen</label>
-          <switch-checkbox v-model="displayedProfile.helper"></switch-checkbox>
+          <input type="checkbox" v-model="displayedProfile.wantsToHelpActive">
         </div>
 
-        <div class="field has-text-left" v-if="displayedProfile.helper">
+        <div class="field has-text-left" v-if="displayedProfile.wantsToHelpActive">
           <label class="label">Kategorien</label>
           <div class="control">
             <div class="select is-multiple is-fullwidth">
-              <select multiple size="5" v-model="displayedProfile.categories">
-                <option v-for="cat in availableCategories" :key="cat.name" :value="cat">{{cat.name}}</option>
-              </select>
+              <selectize persist v-model="displayedProfile.categories" :settings="categorySettings">
+                <option v-for="cat in availableCategories" :key="cat.name" :value="cat.name">{{cat.name}}</option>
+              </selectize>
             </div>
           </div>
           <p class="help">Mehrere mit CTRL+Click auswählen</p>
         </div>
 
-        <div class="field has-text-left" v-if="displayedProfile.helper">
+        <div class="field has-text-left" v-if="displayedProfile.wantsToHelpActive">
           <label class="label">Tags</label>
           <div class="control">
-            <input disabled class="input" v-model="displayedProfile.tags" type="text" placeholder="z.B. sbb, billet, zvv">
+            <selectize v-model="displayedProfile.tags" :settings="tagSettings">
+              <option v-for="tag in availableTags" :key="tag.name" :value="tag.name">{{tag.name}}</option>
+            </selectize>
           </div>
         </div>
 
-        <div class="field has-text-left" v-if="displayedProfile.helper">
+        <div class="field has-text-left" v-if="displayedProfile.wantsToHelpActive">
           <label class="label">Über mich</label>
           <div class="control">
             <textarea class="textarea" v-model="displayedProfile.biographie" placeholder="I am a massive chad and will help with anything."></textarea>
@@ -82,7 +88,7 @@
           </div>
           <div class="level-right">
             <div class="buttons">
-              <button class="button is-info" @click="saveUser(displayedProfile)" :disabled="!this.isValid">Profil speichern</button>
+              <button class="button is-info" @click="saveUser()" :disabled="!this.isValid">Profil speichern</button>
               <button class="button" @click="$router.go(-1)">Abbrechen</button>
             </div>
           </div>
@@ -93,19 +99,19 @@
 </template>
 
 <script>
-import SwitchCheckbox from "@/components/SwitchCheckbox";
+import Selectize from 'vue2-selectize'
 import UserApi from "@/api/userApi";
 import CategoryApi from "@/api/categoryApi";
-import Api from "@/api/api";
+import TagApi from "@/api/tagApi";
 
 const userApi = new UserApi();
 const categoryApi = new CategoryApi();
-const api = new Api();
+const tagApi = new TagApi();
 
 export default {
   name: "Profile",
   components: {
-    SwitchCheckbox
+    Selectize
   },
   data: function () {
     return {
@@ -113,35 +119,43 @@ export default {
         email: "",
         password: "",
         passwordRepeat: "",
-        helper: false,
         availableWeekDays: [],
         categories: [],
-        tags: "", // TODO: has to be array later
-        bio: ""
+        tags: [],
+        bio: "",
+        wantsToHelpActive: false
       },
+      points: 0,
       availableDates: ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
+      datesEnglish: ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"],
       availableCategories: [],
-      selectedCategories: []
+      categorySettings: {selectOnTab: true, maxItems: 5, highlight: true},
+      availableTags: [],
+      tagSettings: {selectOnTab: true, maxItems: 5, highlight: true},
+      availableDatesSettings: {selectOnTab: true, maxItems: 7, highlight: true}
     }
   },
   computed: {
     isValid: function () {
-      let emailOK = this.displayedProfile.email.length > 0;
       let passOK = this.displayedProfile.password === this.displayedProfile.passwordRepeat;
-      return true || emailOK && passOK; // TODO: validation properly
+      return passOK;
     }
   },
   methods: {
-    saveUser: async function (user) {
-      user.type = user.helper ? "Helper" : "Helpseeker";
-      user.availableWeekDays = user.availableWeekDays.map(day => this.availableDates.indexOf(day));
+    saveUser: async function () {
+      this.displayedProfile.availableWeekDays = this.displayedProfile.availableWeekDays.map(day => this.datesEnglish[this.availableDates.indexOf(day)]);
 
       if (this.displayedProfile.password === "") {
         delete this.displayedProfile.password;
       }
 
       try {
-        await userApi.updateCurrentUser(this.displayedProfile)
+        let updatedUser = await userApi.updateCurrentUser(this.displayedProfile);
+        userApi.setCurrentUser(updatedUser);
+        this.displayedProfile = updatedUser;
+        this.displayedProfile.categories = this.displayedProfile.categories.map(cat => cat.name) || [];
+        this.displayedProfile.tags = this.displayedProfile.tags.map(tag => tag.name) || [];
+        this.displayedProfile.availableWeekDays = this.displayedProfile.availableWeekDays.map(day => this.availableDates[this.datesEnglish.indexOf(day)]);
       } catch (e) {
         this.$swal(
           'Aktualisierung fehlgeschlagen.',
@@ -172,7 +186,7 @@ export default {
               confirmButtonText: `Okay`,
             }
           )
-          this.$router.push("/")
+          await this.$router.push("/")
         }
       } catch (e) {
         this.$swal(
@@ -182,16 +196,22 @@ export default {
         )
       }
     },
-    logout: function () {
-      userApi.logout();
-      this.$router.push("/")
+    fetchPoints: async function() {
+      this.points = await userApi.getPoints(userApi.getCurrentUser().email);
+    },
+    logout: async function () {
+      await userApi.logout();
+      await this.$router.push("/");
     }
   },
   beforeMount: async function() {
     this.availableCategories = await categoryApi.fetchCategories();
-    this.displayedProfile = await api.getCurrentUser();
-
-    this.displayedProfile.categories = this.displayedProfile.categories || []
+    this.availableTags = await tagApi.fetchTags()
+    this.displayedProfile = await categoryApi.getCurrentUser();
+    await this.fetchPoints();
+    this.displayedProfile.categories = this.displayedProfile.categories.map(cat => cat.name) || [];
+    this.displayedProfile.tags = this.displayedProfile.tags.map(tag => tag.name) || [];
+    this.displayedProfile.availableWeekDays = this.displayedProfile.availableWeekDays.map(day => this.availableDates[this.datesEnglish.indexOf(day)]);
   }
 }
 </script>

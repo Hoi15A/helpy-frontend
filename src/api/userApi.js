@@ -141,6 +141,7 @@ export default class UserApi extends Api {
             body: JSON.stringify(updatedUser)
         });
         if (!res.ok) throw new Error(`Unable to update user ${currentUser.email}`);
+        return res.json();
     }
 
     /**

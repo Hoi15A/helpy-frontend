@@ -22,11 +22,17 @@
                 <button class="button is-outlined is-rounded is-success">Antrag erstellen</button>
               </router-link>
             </div>
+
             <!--
             <div class="navbar-item" id="points">
-              Punktestand: {{ pts }}
+              Punktestand: {{ points }}
+            </div>
+
+            <div class="navbar-item">
+              <button class="button" @click="logout()">Logout</button>
             </div>
             -->
+
             <div class="profile-picture">
               <router-link to="/profile">
                 <figure class="image is-48x48 is-centered">
@@ -56,11 +62,7 @@
 
 <script>
 export default {
-  data: function() {
-    return {
-      points: 0,
-    }
-  }
+  name: "App",
 }
 </script>
 
