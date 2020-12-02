@@ -1,4 +1,4 @@
-import Api from './api'
+import Api from '@/api/api'
 
 export default class JobApi extends Api {
     constructor() {
@@ -10,7 +10,7 @@ export default class JobApi extends Api {
         if (res.ok) {
             return res.json()
         }
-        if (!res.ok) throw new Error(this.parseError(await res.json));
+        if (!res.ok) throw new Error(this.parseError(await res.json()));
     }
 
     async updateJob (job) {
@@ -21,7 +21,7 @@ export default class JobApi extends Api {
             },
             body: JSON.stringify(job)
         });
-        if (!res.ok) throw new Error(this.parseError(await res.json));
+        if (!res.ok) throw new Error(this.parseError(await res.json()));
         return res.json();
     }
 
@@ -29,7 +29,7 @@ export default class JobApi extends Api {
         let res = await this.customFetch(`${Api.getApiBaseUrl()}/job/id/${jobId}/set-helper/${helperEmail}`, {
             method: "PUT"
         });
-        if (!res.ok) throw new Error(this.parseError(await res.json));
+        if (!res.ok) throw new Error(this.parseError(await res.json()));
         return res.json();
     }
 

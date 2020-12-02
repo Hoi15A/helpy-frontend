@@ -1,4 +1,4 @@
-import Api from './api'
+import Api from '@/api/api'
 
 export default class CategoryApi extends Api {
     constructor() {

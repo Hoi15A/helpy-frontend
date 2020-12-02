@@ -1,5 +1,3 @@
-//import router from "@/router";
-//let router = null;
 const apiBaseUrl = process.env.NODE_ENV === "production" ? "http://helpyProd.example.com/api" : "http://localhost:8080/api";
 
 export default class Api {
@@ -14,7 +12,12 @@ export default class Api {
      * @returns {User} Logged in user
      */
     getCurrentUser () {
-        let currentUser = JSON.parse(localStorage.getItem("helpyUser"));
+        let currentUser = null;
+        try {
+            currentUser = JSON.parse(localStorage.getItem("helpyUser"));
+        } catch (e) {
+            this.handleUnauthorized();
+        }
         if(!currentUser) {
             this.handleUnauthorized();
         }
@@ -23,7 +26,6 @@ export default class Api {
 
     handleUnauthorized() {
         localStorage.removeItem("helpyUser");
-        //router.push("/login");
     }
 
     /**
