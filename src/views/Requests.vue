@@ -17,21 +17,37 @@
             <thead class="has-text-left">
             <tr>
               <th>Antrag</th>
-              <th>Helfer/in</th>
+              <th>Author/in</th>
               <th>Erstelldatum</th>
+              <th>Ablaufdatum</th>
               <th class="has-text-centered">Bearbeiten</th>
             </tr>
             </thead>
             <tbody class="has-text-left">
-            <tr v-for="(currentHelperJobs, index) in currentHelperJobs" v-bind:key="currentHelperJobs.index">
-              <td>{{ currentHelperJobs.title }}</td>
-              <td>{{ currentHelperJobs.matchedHelper.firstname }}</td>
-              <td>{{ currentHelperJobs.created }}</td>
+            <tr v-for="(currentHelperJob, index) in currentHelperJobs" v-bind:key="currentHelperJob.id">
+              <td>{{ currentHelperJob.title }}</td>
+              <td>{{ currentHelperJob.author.firstname }} {{ currentHelperJob.author.lastname }}</td>
+              <td>{{ currentHelperJob.created }}</td>
+              <td>{{ currentHelperJob.dueDate }}</td>
 
               <td>
                 <div class="buttons">
-                  <button class="button" @click="deleteJob(currentHelperJobs, index)">Löschen</button>
-                  <button disabled class="button">Bearbeiten (WIP)</button>
+                  <div class="control">
+                    <button class="button is-danger" @click="deleteJob(currentHelperJobs, index)">
+                      <span class="icon is-small">
+                          <font-awesome-icon icon="trash-alt" />
+                      </span>
+                      <span>Löschen</span>
+                    </button>
+                  </div>
+                  <div class="control">
+                    <button class="button" @click="showHelperJobDetails(currentHelperJob)">
+                      <span class="icon is-small">
+                          <font-awesome-icon icon="info" />
+                      </span>
+                      <span>Details</span>
+                    </button>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -202,11 +218,16 @@ import Selectize from 'vue2-selectize'
 import VueStarRating from "vue-star-rating/src/star-rating";
 import Modal from "@/components/ModalComponent.vue";
 import RequestsJobTable from "@/components/RequestsJobTable.vue";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTrashAlt, faInfo} from '@fortawesome/free-solid-svg-icons';
 
 const userApi = new UserApi();
 const jobApi = new JobApi();
 const categoryApi = new CategoryApi();
 const tagApi = new TagApi();
+
+library.add(faTrashAlt, faInfo);
+
 export default {
   name: "Requests",
   components: {
@@ -275,7 +296,6 @@ export default {
           this.isMatchingModalOpen = true;
           this.helperFound = ((this.availableMatches.length >= 1))
         } catch (e) {
-          // TODO: Tell user that no match was found
           console.error(e);
         }
     },
@@ -321,6 +341,12 @@ export default {
         console.error(e);
       }
     },
+    showHelperJobDetails: function (job) {
+      this.$swal({
+        title: job.title,
+        html: `${job.description}<hr>Kategorien: ${job.categories.map(en => en.name).join(',')}<br>Tags: ${job.tags.map(en => en.name).join(',')}`,
+      })
+    },
     editJob: async function(job) {
       try {
         let tempCurrJob = await jobApi.getJobById(job.id);
@@ -334,7 +360,6 @@ export default {
     },
     updateJob: async function() {
       try {
-        //DTO Bug mit Status
         let updatedJob = await jobApi.updateJob(this.currentJob);
 
         if (updatedJob.status === "OPEN") {
