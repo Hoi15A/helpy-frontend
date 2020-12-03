@@ -23,16 +23,6 @@
               </router-link>
             </div>
 
-            <!--
-            <div class="navbar-item" id="points">
-              Punktestand: {{ points }}
-            </div>
-
-            <div class="navbar-item">
-              <button class="button" @click="logout()">Logout</button>
-            </div>
-            -->
-
             <div class="profile-picture">
               <router-link to="/profile">
                 <figure class="image is-48x48 is-centered">

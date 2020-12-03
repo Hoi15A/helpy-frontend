@@ -8,7 +8,6 @@
           </figure>
         </div>
 
-        <button disabled class="button">Avatar hochladen</button>
         <button class="button" @click="logout()">Logout</button>
 
         <div class="field has-text-left">
