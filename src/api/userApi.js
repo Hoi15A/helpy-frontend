@@ -106,17 +106,6 @@ export default class UserApi extends Api {
     }
 
     /**
-     * Fetch a user from the api
-     *
-     * @param email
-     * @returns {Promise<User>} User
-     */
-    async fetchUser (email) {
-        let res = await this.customFetch(`${Api.getApiBaseUrl()}/user/${email}`);
-        return res.json();
-    }
-
-    /**
      * Put a user into local storage
      *
      * @param user

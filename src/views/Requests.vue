@@ -424,6 +424,7 @@ export default {
     }
   },
   beforeMount: async function() {
+    // noinspection ES6MissingAwait
     this.loadUserJobs();
     this.availableCategories = await categoryApi.fetchCategories();
     this.availableTags = await tagApi.fetchTags();

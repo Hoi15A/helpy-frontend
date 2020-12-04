@@ -95,8 +95,7 @@ export default {
       });
     },
     fetchPoints: async function() {
-      let points = await userApi.getPoints(userApi.getCurrentUser().email);
-      this.points = points;
+      this.points = await userApi.getPoints(userApi.getCurrentUser().email);
     },
     getLatestRating: async function() {
       let rating = await userApi.getLatestRating(userApi.getCurrentUser().email);
@@ -110,7 +109,7 @@ export default {
       let matchesCounter = 0;
 
       for (let i = 0; i < this.jobs.length; i++) {
-        if (this.jobs[i].status == "OPEN") {
+        if (this.jobs[i].status === "OPEN") {
           let helpers = await jobApi.findHelperForJobId(this.jobs[i].id);
           if (helpers.length > 0) {
             matchesCounter++;
