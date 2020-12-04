@@ -24,6 +24,9 @@ export default class Api {
         return currentUser;
     }
 
+    /**
+     * Remove the cached user from storage
+     */
     handleUnauthorized() {
         localStorage.removeItem("helpyUser");
     }

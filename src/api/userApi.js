@@ -57,7 +57,7 @@ export default class UserApi extends Api {
     }
 
     /**
-     *
+     * Add a rating to a user
      *
      * @param rating
      * @param email
@@ -78,6 +78,9 @@ export default class UserApi extends Api {
         }
     }
 
+    /**
+     * Returns the top 10 users
+     */
     async getTopTenUsers () {
         let res = await this.customFetch(`${Api.getApiBaseUrl()}/user/points/top-ten`);
         if (res.ok) {
@@ -87,6 +90,10 @@ export default class UserApi extends Api {
         }
     }
 
+    /**
+     * Gets the points for a specific user
+     * @param email
+     */
     async getPoints(email) {
         let res = await this.customFetch(`${Api.getApiBaseUrl()}/user/points/${email}`);
         if (res.ok) {
@@ -96,6 +103,11 @@ export default class UserApi extends Api {
         }
     }
 
+    /**
+     * Gets the latest rating for a user
+     * @param email
+     * @returns {Promise<Rating>}
+     */
     async getLatestRating(email) {
         let res = await this.customFetch(`${Api.getApiBaseUrl()}/user/rating/latest/${email}`);
         if (res.ok) {
