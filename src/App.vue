@@ -19,7 +19,14 @@
           <div class="navbar-end">
             <div class="navbar-item" v-if="this.$route.path !== '/requests/create'">
               <router-link to="/requests/create">
-                <button class="button is-outlined is-rounded is-success">Antrag erstellen</button>
+                <button class="button is-outlined is-rounded is-success">
+                  <span class="icon is-small">
+                      <font-awesome-icon icon="plus" />
+                  </span>
+                  <span>
+                    Antrag erstellen
+                  </span>
+                </button>
               </router-link>
             </div>
 
@@ -54,6 +61,11 @@
 export default {
   name: "App",
 }
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faPlus} from '@fortawesome/free-solid-svg-icons'
+
+library.add(faPlus);
 </script>
 
 <style lang="less">

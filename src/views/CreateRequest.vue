@@ -53,7 +53,14 @@
         <div class="field">
           <div class="buttons">
             <div class="control">
-              <button class="button is-info" @click="saveRequest()">Antrag Erstellen</button>
+              <button class="button is-info" @click="saveRequest()">
+                <span class="icon is-small">
+                  <font-awesome-icon icon="plus" />
+                </span>
+                <span>
+                  Antrag erstellen
+                </span>
+              </button>
             </div>
             <div class="control">
               <button class="button" @click="$router.push('/')">Abbrechen</button>
@@ -110,7 +117,7 @@ import CategoryApi from "@/api/categoryApi";
 import TagApi from "@/api/tagApi";
 import Selectize from 'vue2-selectize'
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHeading, faCalendar } from '@fortawesome/free-solid-svg-icons'
+import { faHeading, faCalendar, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 
 const jobApi = new JobApi();
@@ -118,7 +125,7 @@ const categoryApi = new CategoryApi();
 const tagApi = new TagApi();
 const api = new Api();
 
-library.add(faHeading, faCalendar);
+library.add(faHeading, faCalendar, faPlus);
 
 export default {
   name: "CreateRequest",

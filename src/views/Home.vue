@@ -41,11 +41,17 @@
       <div class="buttons is-centered">
         <div class="control">
           <button class="button is-info" @click="$router.push('/login')">
+            <span class="icon is-small">
+                <font-awesome-icon icon="sign-in-alt" />
+            </span>
             <span>Anmelden</span>
           </button>
         </div>
         <div class="control">
           <button class="button" @click="$router.push('/register')">
+            <span class="icon is-small">
+                <font-awesome-icon icon="user-plus" />
+            </span>
             <span>Registrieren</span>
           </button>
         </div>
@@ -58,6 +64,11 @@
 <script>
 import UserApi from "@/api/userApi";
 import JobApi from "@/api/jobApi"
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faUserPlus, faSignInAlt } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faUserPlus, faSignInAlt);
 
 const userApi = new UserApi();
 const jobApi = new JobApi();

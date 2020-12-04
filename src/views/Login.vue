@@ -24,7 +24,14 @@
         <div class="field">
           <div class="buttons">
             <div class="control">
-              <button class="button is-info" v-on:click="login()">Login</button>
+              <button class="button is-info" v-on:click="login()">
+                <span class="icon is-small">
+                  <font-awesome-icon icon="sign-in-alt" />
+                </span>
+                <span>
+                  Login
+                </span>
+              </button>
             </div>
             <div class="control">
               <button class="button" v-on:click="cancel()">Abbrechen</button>
@@ -39,11 +46,11 @@
 <script>
 import UserApi from "@/api/userApi";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEnvelope, faKey } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faKey, faSignInAlt } from '@fortawesome/free-solid-svg-icons'
 
 const userApi = new UserApi();
 
-library.add(faEnvelope, faKey);
+library.add(faEnvelope, faKey, faSignInAlt);
 
 export default {
   name: "Login",

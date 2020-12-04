@@ -8,30 +8,46 @@
           </figure>
         </div>
 
-        <button class="button" @click="logout()">Logout</button>
+        <button class="button" @click="logout()">
+          <span class="icon is-small">
+              <font-awesome-icon icon="sign-out-alt" />
+          </span>
+          <span>
+            Logout
+          </span>
+        </button>
 
         <div class="field has-text-left">
-          <label class="label">Punktestand: {{points}}</label>
+          <label class="label">Punktestand: {{points}} <font-awesome-icon icon="coins" /></label>
         </div>
 
         <div class="field has-text-left">
           <label class="label">Email</label>
-          <div class="control">
+          <div class="control has-icons-left">
             <input class="input" v-model="displayedProfile.email" type="mail" placeholder="mail@provider.tld">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="envelope" />
+            </span>
           </div>
         </div>
 
         <div class="field has-text-left">
           <label class="label">Passwort</label>
-          <div class="control">
+          <div class="control has-icons-left">
             <input class="input" v-model="displayedProfile.password" type="password" placeholder="hunter2">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="key" />
+            </span>
           </div>
         </div>
 
         <div class="field has-text-left">
           <label class="label">Passwort wiederholen</label>
-          <div class="control">
+          <div class="control has-icons-left">
             <input class="input" v-model="displayedProfile.passwordRepeat" type="password" placeholder="hunter2">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="key" />
+            </span>
           </div>
         </div>
 
@@ -83,11 +99,23 @@
 
         <div class="level">
           <div class="level-left">
-            <button class="button is-danger" @click="deleteUser()">Löschen</button>
+            <button class="button is-danger" @click="deleteUser()">
+              <span class="icon is-small">
+                  <font-awesome-icon icon="trash-alt" />
+              </span>
+              <span>Löschen</span>
+            </button>
           </div>
           <div class="level-right">
             <div class="buttons">
-              <button class="button is-info" @click="saveUser()" :disabled="!this.isValid">Profil speichern</button>
+              <button class="button is-info" @click="saveUser()" :disabled="!this.isValid">
+                <span class="icon is-small">
+                  <font-awesome-icon icon="save" />
+                </span>
+                <span>
+                  Profil speichern
+                </span>
+              </button>
               <button class="button" @click="$router.go(-1)">Abbrechen</button>
             </div>
           </div>
@@ -102,6 +130,11 @@ import Selectize from 'vue2-selectize'
 import UserApi from "@/api/userApi";
 import CategoryApi from "@/api/categoryApi";
 import TagApi from "@/api/tagApi";
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEnvelope, faKey, faCoins, faTrashAlt, faSave, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faEnvelope, faKey, faCoins, faTrashAlt, faSave, faSignOutAlt);
 
 const userApi = new UserApi();
 const categoryApi = new CategoryApi();
