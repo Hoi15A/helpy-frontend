@@ -56,7 +56,7 @@
         </div>
 
         <div v-if="selectedRole === 'HelpSeeker'">
-          <h2 class="has-text-left table-label">Laufende Anträge (IN_PROGRESS)</h2>
+          <h2 class="has-text-left table-label">Laufende Anträge<!-- (IN_PROGRESS) --></h2>
           <requests-job-table v-bind:jobs="inProgressJobs"
                               v-on:open-profile="showProfileFromJob"
                               v-on:delete-job="deleteJob"
@@ -65,7 +65,7 @@
         </div>
 
         <div v-if="selectedRole === 'HelpSeeker'">
-          <h2 class="has-text-left table-label">Offene Anträge (OPEN)</h2>
+          <h2 class="has-text-left table-label">Offene Anträge<!-- (OPEN) --></h2>
           <requests-job-table v-bind:jobs="openJobs" 
                               v-on:delete-job="deleteJob" 
                               v-on:match-job="findMatch"

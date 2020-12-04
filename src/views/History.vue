@@ -10,13 +10,13 @@
           </ul>
         </div>
         <div v-if="this.selectedRole === 'HelpSeeker'">
-          <h2 class="has-text-left table-label">Abgeschlossene Anträge (CLOSED)</h2>
+          <h2 class="has-text-left table-label">Abgeschlossene Anträge</h2>
           <closed-job-table v-bind:jobs="closedJobs"></closed-job-table>
         </div>
 
 
         <div v-if="this.selectedRole === 'Helper'">
-          <h2 class="has-text-left table-label">Abgeschlossene Anträge als Helper(CLOSED)</h2>
+          <h2 class="has-text-left table-label">Abgeschlossene Anträge als Helper</h2>
           <closed-job-table v-bind:jobs="closedJobsAsHelper"></closed-job-table>
         </div>
 
