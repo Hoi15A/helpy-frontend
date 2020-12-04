@@ -76,7 +76,6 @@
               </selectize>
             </div>
           </div>
-          <p class="help">Mehrere mit CTRL+Click auswählen</p>
         </div>
 
         <div class="field has-text-left" v-if="displayedProfile.wantsToHelpActive">
