@@ -145,6 +145,7 @@ export default {
       }
     },
     validateUser: function(user) {
+      let isValid = true;
       if (user.password !== user.repeatPass) {
         this.$swal(
             {
@@ -152,9 +153,20 @@ export default {
               icon: 'error'
             }
         )
-        return false;
+        isValid = false;
       }
-      return true;
+
+      if (!/^\d{4}$/.test(user.plz)) {
+        this.$swal(
+            {
+              title: 'Postleitzahl ist ungültig',
+              icon: 'error'
+            }
+        )
+        isValid = false;
+      }
+
+      return isValid;
     }
   }
 };
