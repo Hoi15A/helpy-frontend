@@ -20,26 +20,18 @@
               <th>Author/in</th>
               <th>Erstelldatum</th>
               <th>Ablaufdatum</th>
-              <th class="has-text-centered">Bearbeiten</th>
+              <th class="has-text-centered">Info</th>
             </tr>
             </thead>
             <tbody class="has-text-left">
-            <tr v-for="(currentHelperJob, index) in currentHelperJobs" v-bind:key="currentHelperJob.id">
+            <tr v-for="(currentHelperJob) in currentHelperJobs" v-bind:key="currentHelperJob.id">
               <td>{{ currentHelperJob.title }}</td>
               <td>{{ currentHelperJob.author.firstname }} {{ currentHelperJob.author.lastname }}</td>
               <td>{{ currentHelperJob.created }}</td>
               <td>{{ currentHelperJob.dueDate }}</td>
 
               <td>
-                <div class="buttons">
-                  <div class="control">
-                    <button class="button is-danger" @click="deleteJob(currentHelperJobs, index)">
-                      <span class="icon is-small">
-                          <font-awesome-icon icon="trash-alt" />
-                      </span>
-                      <span>Löschen</span>
-                    </button>
-                  </div>
+                <div class="buttons is-centered">
                   <div class="control">
                     <button class="button" @click="showHelperJobDetails(currentHelperJob)">
                       <span class="icon is-small">
