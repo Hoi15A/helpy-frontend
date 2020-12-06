@@ -85,7 +85,7 @@ router.beforeEach((to, from, next) => {
     // if not, redirect to login page.
     if (currentUser === null || currentUser === undefined) {
       next({
-        path: '/login'
+        path: "/login"
       });
     } else {
       next();

@@ -9,11 +9,11 @@
 export default {
   name: "SwitchCheckbox",
   data: function() {
-  return {
+    return {
       value: false
     };
   }
-}
+};
 </script>
 
 <style scoped>

@@ -206,12 +206,12 @@ import JobApi from "@/api/jobApi";
 import UserApi from "@/api/userApi";
 import CategoryApi from "@/api/categoryApi";
 import TagApi from "@/api/tagApi";
-import Selectize from 'vue2-selectize'
+import Selectize from "vue2-selectize";
 import VueStarRating from "vue-star-rating/src/star-rating";
 import Modal from "@/components/ModalComponent.vue";
 import RequestsJobTable from "@/components/RequestsJobTable.vue";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTrashAlt, faInfo} from '@fortawesome/free-solid-svg-icons';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faTrashAlt, faInfo} from "@fortawesome/free-solid-svg-icons";
 
 const userApi = new UserApi();
 const jobApi = new JobApi();
@@ -242,7 +242,7 @@ export default {
       helperFound: false,
       openMatcherProfileModal: false,
       jobClosedBySeeker: false,
-      selectedRole: 'HelpSeeker',
+      selectedRole: "HelpSeeker",
       currentJob: null,
       categorySettings: {selectOnTab: true, maxItems: 5, highlight: true},
       tagSettings: {selectOnTab: true, maxItems: 5, highlight: true},
@@ -277,22 +277,22 @@ export default {
             this.closedJobs.push(jobs[i]);
             break;
           default:
-            console.error("Job without status was received: ", jobs[i])
+            console.error("Job without status was received: ", jobs[i]);
         }
       }
     },
     findMatch: async function(job) {
       try {
-          this.tempOpenMatcherJob = await jobApi.getJobById(job.id);
-          this.availableMatches = await jobApi.findHelperForJobId(job.id);
-          this.isMatchingModalOpen = true;
-          this.helperFound = ((this.availableMatches.length >= 1))
-        } catch (e) {
-          console.error(e);
-        }
+        this.tempOpenMatcherJob = await jobApi.getJobById(job.id);
+        this.availableMatches = await jobApi.findHelperForJobId(job.id);
+        this.isMatchingModalOpen = true;
+        this.helperFound = ((this.availableMatches.length >= 1));
+      } catch (e) {
+        console.error(e);
+      }
     },
     closeJob: async function () {
-      let tempJob = this.tempJob
+      let tempJob = this.tempJob;
 
       await userApi.addRating(this.tempRating, tempJob.matchedHelper.email);
       await jobApi.closeJobById(tempJob.id);
@@ -336,8 +336,8 @@ export default {
     showHelperJobDetails: function (job) {
       this.$swal({
         title: job.title,
-        html: `${job.description}<hr>Kategorien: ${job.categories.map(en => en.name).join(',')}<br>Tags: ${job.tags.map(en => en.name).join(',')}`,
-      })
+        html: `${job.description}<hr>Kategorien: ${job.categories.map(en => en.name).join(",")}<br>Tags: ${job.tags.map(en => en.name).join(",")}`,
+      });
     },
     editJob: async function(job) {
       try {
@@ -345,7 +345,7 @@ export default {
         tempCurrJob.categories = tempCurrJob.categories.map(en => en.name);
         tempCurrJob.tags = tempCurrJob.tags.map(en => en.name);
         this.currentJob = tempCurrJob;
-        this.isEditingJob = true
+        this.isEditingJob = true;
       } catch(e) {
         console.error(e);
       }
@@ -368,14 +368,14 @@ export default {
       try {
         let result = await this.$swal(
           {
-            title: 'Antrag löschen?',
-            html: 'Willst du deinen Antrag wirklich löschen?',
-            icon: 'warning',
+            title: "Antrag löschen?",
+            html: "Willst du deinen Antrag wirklich löschen?",
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonText: `Löschen`,
-            cancelButtonText: `Abbrechen`
+            confirmButtonText: "Löschen",
+            cancelButtonText: "Abbrechen"
           }
-        )
+        );
         if (result.isConfirmed) {
           await jobApi.deleteJobById(job.id);
 
@@ -393,21 +393,21 @@ export default {
           
           this.$swal(
             {
-              title: 'Antrag gelöscht.',
-              html: 'Dein Antrag wurde erfolgreich gelöscht.',
-              icon: 'success',
-              confirmButtonText: `OK`,
+              title: "Antrag gelöscht.",
+              html: "Dein Antrag wurde erfolgreich gelöscht.",
+              icon: "success",
+              confirmButtonText: "OK",
             }
-          )
+          );
         }
       } catch (e) {
-         this.$swal(
-            {
-              title: 'Fehler beim Löschen',
-              html: 'Dein Antrag konnte nicht gelöscht werden.',
-              icon: 'error'
-            }
-          )
+        this.$swal(
+          {
+            title: "Fehler beim Löschen",
+            html: "Dein Antrag konnte nicht gelöscht werden.",
+            icon: "error"
+          }
+        );
       }
     },
     openRateJobModal: async function (job) {

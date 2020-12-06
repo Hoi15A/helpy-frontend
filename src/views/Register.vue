@@ -92,8 +92,8 @@
 
 <script>
 import UserApi from "@/api/userApi";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEnvelope, faKey, faIdCard, faCalendar, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEnvelope, faKey, faIdCard, faCalendar, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 
 const userApi = new UserApi();
 
@@ -122,8 +122,6 @@ export default {
   methods: {
     registerUser: async function() {
       if (this.validateUser(this.user)) {
-        // delete this.user.repeatPass;
-
         let success = true;
 
         try {
@@ -131,10 +129,10 @@ export default {
         } catch (e) {
           success = false;
           this.$swal(
-              'Registration Fehlgeschlagen',
-              e.message,
-              'error'
-          )
+            "Registration Fehlgeschlagen",
+            e.message,
+            "error"
+          );
         }
 
         if (success) {
@@ -148,21 +146,21 @@ export default {
       let isValid = true;
       if (user.password !== user.repeatPass) {
         this.$swal(
-            {
-              title: 'Passwörter sind nicht gleich',
-              icon: 'error'
-            }
-        )
+          {
+            title: "Passwörter sind nicht gleich",
+            icon: "error"
+          }
+        );
         isValid = false;
       }
 
       if (!/^\d{4}$/.test(user.plz)) {
         this.$swal(
-            {
-              title: 'Postleitzahl ist ungültig',
-              icon: 'error'
-            }
-        )
+          {
+            title: "Postleitzahl ist ungültig",
+            icon: "error"
+          }
+        );
         isValid = false;
       }
 

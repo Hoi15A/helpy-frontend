@@ -63,10 +63,10 @@
 
 <script>
 import UserApi from "@/api/userApi";
-import JobApi from "@/api/jobApi"
+import JobApi from "@/api/jobApi";
 
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUserPlus, faSignInAlt } from '@fortawesome/free-solid-svg-icons'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faUserPlus, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faUserPlus, faSignInAlt);
 
@@ -97,7 +97,7 @@ export default {
       let rank = 1;
       users.forEach(user => {
         let userDate = new Date(user.birthdate);
-        let ageDifMs = Date.now() - userDate.getTime()
+        let ageDifMs = Date.now() - userDate.getTime();
         let ageDate = new Date(ageDifMs);
         let age = Math.abs(ageDate.getUTCFullYear() - 1970);
         let points = user.ratings.length > 0 ? user.ratings.reduce((x, y) => x + y) : 0;

@@ -1,18 +1,18 @@
-import Api from '@/api/api'
+import Api from "@/api/api";
 
 export default class TagApi extends Api {
 
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    /**
+  /**
      * Fetch all available tags from the api
      *
      * @returns {Promise<Array<Tag>>} Tags
      */
-    async fetchTags () {
-        let res = await this.customFetch(`${Api.getApiBaseUrl()}/tag/all`);
-        return res.json();
-    }
+  async fetchTags () {
+    let res = await this.customFetch(`${Api.getApiBaseUrl()}/tag/all`);
+    return res.json();
+  }
 }

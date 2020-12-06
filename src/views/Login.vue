@@ -45,8 +45,8 @@
 
 <script>
 import UserApi from "@/api/userApi";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEnvelope, faKey, faSignInAlt } from '@fortawesome/free-solid-svg-icons'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEnvelope, faKey, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 
 const userApi = new UserApi();
 
@@ -58,7 +58,7 @@ export default {
     return {
       username: "",
       password: ""
-    }
+    };
   },
   methods: {
     login: async function () {
@@ -68,10 +68,10 @@ export default {
         await this.$router.push("/");
       } catch (e) {
         this.$swal(
-          'Login fehlgeschlagen',
+          "Login fehlgeschlagen",
           e.message,
-          'error'
-        )
+          "error"
+        );
       }
     },
     cancel: function () {
@@ -81,7 +81,7 @@ export default {
   beforeMount: async function() {
     //
   }
-}
+};
 </script>
 
 <style scoped>

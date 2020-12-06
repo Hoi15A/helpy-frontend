@@ -23,9 +23,9 @@
 export default {
   name: "ClosedJobTable",
   props: {
-      jobs: Array
+    jobs: Array
   }
-}
+};
 </script>
 
 <style scoped>

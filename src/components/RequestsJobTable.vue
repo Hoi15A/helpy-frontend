@@ -72,17 +72,17 @@
 </template>
 
 <script>
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTrashAlt, faPeopleArrows, faEdit, faClipboardCheck } from '@fortawesome/free-solid-svg-icons'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faTrashAlt, faPeopleArrows, faEdit, faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faTrashAlt, faPeopleArrows, faEdit, faClipboardCheck);
 
 export default {
   name: "RequestsJobTable",
   props: {
-      jobs: Array
+    jobs: Array
   }
-}
+};
 </script>
 
 <style scoped>

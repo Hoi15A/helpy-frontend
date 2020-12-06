@@ -115,9 +115,9 @@ import Api from "@/api/api";
 import JobApi from "@/api/jobApi";
 import CategoryApi from "@/api/categoryApi";
 import TagApi from "@/api/tagApi";
-import Selectize from 'vue2-selectize'
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHeading, faCalendar, faPlus } from '@fortawesome/free-solid-svg-icons'
+import Selectize from "vue2-selectize";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faHeading, faCalendar, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 
 const jobApi = new JobApi();
@@ -150,7 +150,7 @@ export default {
       currentJob: {},
       isModalOpen: false,
       helperFound: false
-    }
+    };
   },
   methods: {
     saveRequest: async function () {
@@ -162,21 +162,21 @@ export default {
         try {
           this.availableMatches = await jobApi.findHelperForJobId(this.currentJob.id);
           this.isModalOpen = true;
-          this.helperFound = ((this.availableMatches.length >= 1))
+          this.helperFound = ((this.availableMatches.length >= 1));
         } catch (e) {
           this.$swal(
-            'API-Fehler etwas ist schiefgelaufen.',
+            "API-Fehler etwas ist schiefgelaufen.",
             e.message,
-            'error'
-          )
+            "error"
+          );
         }
 
       } catch (e) {
         this.$swal(
-          'Job konnte nicht erstellt werden.',
+          "Job konnte nicht erstellt werden.",
           e.message,
-          'error'
-        )
+          "error"
+        );
       }
     },
     selectHelper: async function (helper) {
@@ -187,10 +187,10 @@ export default {
         await this.$router.push("/requests");
       } catch (e) {
         this.$swal(
-          'Helper konnte nicht dem Antrag zugeteilt werden.',
+          "Helper konnte nicht dem Antrag zugeteilt werden.",
           e.message,
-          'error'
-        )
+          "error"
+        );
       } finally {
         this.isModalOpen = false;
       }

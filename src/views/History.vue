@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import ClosedJobTable from "@/components/ClosedJobTable.vue"
+import ClosedJobTable from "@/components/ClosedJobTable.vue";
 import JobApi from "@/api/jobApi";
 
 const jobApi = new JobApi();
@@ -43,7 +43,7 @@ export default {
       closedJobsAsHelper: [],
       jobsCollector: [],
       selectedRole: "HelpSeeker"
-    }
+    };
   },
   methods: {
     loadUserJobs: async function () {
@@ -77,7 +77,7 @@ export default {
   beforeMount: function() {
     this.loadUserJobs();
   }
-}
+};
 </script>
 
 <style scoped>

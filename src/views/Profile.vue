@@ -125,13 +125,13 @@
 </template>
 
 <script>
-import Selectize from 'vue2-selectize'
+import Selectize from "vue2-selectize";
 import UserApi from "@/api/userApi";
 import CategoryApi from "@/api/categoryApi";
 import TagApi from "@/api/tagApi";
 
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEnvelope, faKey, faCoins, faTrashAlt, faSave, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEnvelope, faKey, faCoins, faTrashAlt, faSave, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faEnvelope, faKey, faCoins, faTrashAlt, faSave, faSignOutAlt);
 
@@ -164,7 +164,7 @@ export default {
       availableTags: [],
       tagSettings: {selectOnTab: true, maxItems: 5, highlight: true},
       availableDatesSettings: {selectOnTab: true, maxItems: 7, highlight: true}
-    }
+    };
   },
   computed: {
     isValid: function () {
@@ -189,42 +189,42 @@ export default {
         this.displayedProfile.availableWeekDays = this.displayedProfile.availableWeekDays.map(day => this.availableDates[this.datesEnglish.indexOf(day)]);
       } catch (e) {
         this.$swal(
-          'Aktualisierung fehlgeschlagen.',
+          "Aktualisierung fehlgeschlagen.",
           e.message,
-          'error'
-        )
+          "error"
+        );
       }
     },
     deleteUser: async function() {
       try {
         let result = await this.$swal(
           {
-            title: 'Konto löschen?',
-            html: 'Willst du uns wirklich verlassen?',
-            icon: 'warning',
+            title: "Konto löschen?",
+            html: "Willst du uns wirklich verlassen?",
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonText: `Löschen`,
-            cancelButtonText: `Abbrechen`
+            confirmButtonText: "Löschen",
+            cancelButtonText: "Abbrechen"
           }
-        )
+        );
         if (result.isConfirmed) {
           await userApi.deleteUserByEmail(this.displayedProfile.email);
           this.$swal(
             {
-              title: 'Konto erfolgreich gelöscht.',
-              html: 'Schade, dass du uns verlässt :(',
-              icon: 'success',
-              confirmButtonText: `Okay`,
+              title: "Konto erfolgreich gelöscht.",
+              html: "Schade, dass du uns verlässt :(",
+              icon: "success",
+              confirmButtonText: "Okay",
             }
-          )
-          await this.$router.push("/")
+          );
+          await this.$router.push("/");
         }
       } catch (e) {
         this.$swal(
-          'Fehler beim Löschen.',
-          'Konto konnte nicht gelöscht werden.',
-          'error'
-        )
+          "Fehler beim Löschen.",
+          "Konto konnte nicht gelöscht werden.",
+          "error"
+        );
       }
     },
     fetchPoints: async function() {
@@ -237,14 +237,14 @@ export default {
   },
   beforeMount: async function() {
     this.availableCategories = await categoryApi.fetchCategories();
-    this.availableTags = await tagApi.fetchTags()
+    this.availableTags = await tagApi.fetchTags();
     this.displayedProfile = await categoryApi.getCurrentUser();
     await this.fetchPoints();
     this.displayedProfile.categories = this.displayedProfile.categories.map(cat => cat.name) || [];
     this.displayedProfile.tags = this.displayedProfile.tags.map(tag => tag.name) || [];
     this.displayedProfile.availableWeekDays = this.displayedProfile.availableWeekDays.map(day => this.availableDates[this.datesEnglish.indexOf(day)]);
   }
-}
+};
 </script>
 
 <style scoped type="less">
